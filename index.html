@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>David Vardic · Operations Engineer &amp; AI Builder</title>
+  <meta name="description" content="David Vardic — Production Engineer at ZF Friedrichshafen AG, building AI tools for industrial operations. Explore my projects, skills, and background." />
+  <meta name="author" content="David Vardic" />
+  <meta property="og:title" content="David Vardic · Operations Engineer &amp; AI Builder" />
+  <meta property="og:description" content="24-year-old engineer bridging Operations and AI. Currently at ZF Friedrichshafen AG — shipping AI products for real factory floors." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.min.js" } }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    ::selection { background: #4f8ef7; color: #fff; }
+
+    :root {
+      --bg:         #080808;
+      --surface:    #101010;
+      --card:       #121212;
+      --border:     rgba(255,255,255,.07);
+      --border2:    rgba(255,255,255,.13);
+      --text:       #f0f0f0;
+      --muted:      rgba(240,240,240,.4);
+      --muted2:     rgba(240,240,240,.80);
+      --accent:     #4f8ef7;
+      --accent2:    #7eb3ff;
+      --accent-dim: rgba(79,142,247,.15);
+      --accent-glow:rgba(79,142,247,.3);
+      --teal:       #6ee7b7;
+      --teal-dim:   rgba(110,231,183,.08);
+      --holo-1:     rgba(79,142,247,.7);
+      --holo-2:     rgba(110,231,183,.5);
+      --holo-3:     rgba(147,112,219,.4);
+      --max:        1100px;
+      --radius-card:18px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body.cursor-active { cursor: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NOISE TEXTURE ─────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      opacity: .032;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── WEBGL CANVAS ──────────────────────────────────────── */
+    #webgl-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+      width: 100%; height: 100%;
+    }
+
+    /* ── BACKGROUND GLOW BLOBS ─────────────────────────────── */
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      animation: blobDrift 18s ease-in-out infinite alternate;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 55% 40% at 8% 80%,  rgba(35,85,210,.14) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 85% 15%, rgba(30,70,185,.08) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 25% at 50% 50%, rgba(110,231,183,.03) 0%, transparent 50%);
+    }
+    @keyframes blobDrift {
+      from { transform: scale(1) translateY(0); }
+      to   { transform: scale(1.06) translateY(-18px); }
+    }
+
+    /* ── CUSTOM CURSOR ─────────────────────────────────────── */
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      border-radius: 50%; transform: translate(-50%,-50%);
+      transition: width .2s, height .2s, border-color .2s, background .2s;
+    }
+    .cursor-dot  { width: 8px; height: 8px; background: var(--accent); }
+    .cursor-ring { width: 36px; height: 36px; border: 1.5px solid rgba(79,142,247,.5); }
+    .cursor-ring.hovered { width: 54px; height: 54px; border-color: var(--teal); }
+    @media (hover: none), (pointer: coarse) {
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed; inset: 0 0 auto 0; z-index: 200;
+      height: 64px;
+      display: flex; align-items: center;
+      padding: 0 2.5rem;
+      background: rgba(8,8,8,.88);
+      -webkit-backdrop-filter: blur(32px);
+      backdrop-filter: blur(32px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max); width: 100%; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800; font-size: 1.1rem; letter-spacing: -0.03em; color: #fff;
+      animation: glitch 9s step-end infinite;
+    }
+    .nav-logo span { color: var(--accent); }
+    @keyframes glitch {
+      0%,91%,100% { clip-path: none; transform: none; text-shadow: none; }
+      92% { clip-path: inset(25% 0 45% 0); transform: translateX(-3px); }
+      94% { clip-path: inset(55% 0 15% 0); transform: translateX(3px); text-shadow: 2px 0 var(--teal); }
+      96% { clip-path: none; transform: none; }
+    }
+    .nav-links { display: flex; align-items: center; gap: .1rem; list-style: none; }
+    .nav-links a {
+      display: flex; align-items: center; gap: .45rem;
+      font-size: .78rem; font-weight: 500; color: var(--muted2);
+      padding: .45rem .9rem; border-radius: 8px;
+      transition: color .15s, background .15s;
+      position: relative;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: -1px; left: .9rem; right: .9rem;
+      height: 2px; background: var(--accent); border-radius: 1px;
+    }
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: .5rem; border-radius: 8px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--muted2); border-radius: 2px; transition: all .25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-drawer {
+      display: none; position: fixed; inset: 64px 0 0 0; z-index: 190;
+      background: rgba(8,8,8,.97); -webkit-backdrop-filter: blur(28px); backdrop-filter: blur(28px);
+      padding: 2rem; flex-direction: column; gap: .5rem;
+      transform: translateX(100%); transition: transform .28s ease;
+    }
+    .nav-drawer.open { transform: translateX(0); }
+    .nav-drawer a {
+      display: flex; align-items: center; gap: .75rem;
+      font-size: 1.1rem; font-weight: 500; color: var(--muted2);
+      padding: 1rem; border-radius: 12px; border: 1px solid var(--border);
+      transition: color .15s, background .15s;
+    }
+    .nav-drawer a:hover, .nav-drawer a.active {
+      color: #fff; background: rgba(79,142,247,.08); border-color: rgba(79,142,247,.25);
+    }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px 2rem 60px;
+      position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .55rem;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border2);
+      padding: .55rem 1.5rem; border-radius: 100px;
+      font-size: .88rem; font-weight: 500; color: var(--muted2);
+      margin-bottom: 2rem; letter-spacing: .04em;
+      font-family: 'JetBrains Mono', monospace;
+      opacity: 0;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 7px var(--accent-glow);
+      animation: pdot 2s ease-in-out infinite; flex-shrink: 0;
+    }
+    @keyframes pdot { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.5} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    #badge-text-cursor {
+      display: inline-block; width: .55em; height: .8em;
+      background: var(--accent); margin-left: .1em; vertical-align: middle;
+      animation: blink .65s step-end infinite; border-radius: 1px;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3.6rem, 10vw, 8.5rem);
+      font-weight: 700; line-height: 1.0; letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+    }
+    /* Each char wrapped for GSAP — last few chars get accent tint */
+    .hero h1 .char { display: inline-block; }
+    .hero h1 .char-accent {
+      display: inline-block;
+      color: #ffffff;
+    }
+    .hero-sub {
+      max-width: 620px; font-size: 1.08rem; font-weight: 300;
+      color: var(--muted2); line-height: 1.78; margin-bottom: 2.75rem;
+      opacity: 0;
+    }
+    .hero-sub strong { color: var(--accent2); font-weight: 600; }
+    .hero-buttons {
+      display: flex; gap: 1rem; align-items: center;
+      justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;
+      opacity: 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .82rem 2rem; border-radius: 10px;
+      font-size: .9rem; font-weight: 600;
+      transition: all .2s; cursor: none; border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 22px var(--accent-glow);
+    }
+    .btn-primary:hover { background: #6ba3ff; transform: translateY(-3px); box-shadow: 0 10px 36px var(--accent-glow); }
+    .btn-secondary {
+      background: transparent; color: var(--muted2); border: 1px solid var(--border2);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,.28); color: #fff; transform: translateY(-3px); }
+
+    /* logo ticker */
+    .logo-ticker {
+      width: 100%; overflow: hidden;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0; margin-bottom: 3.5rem; opacity: 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    }
+    .ticker-track { display: flex; align-items: center; width: max-content; animation: ticker 28s linear infinite; }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-item { display: flex; align-items: center; gap: .75rem; padding: 0 2.5rem; white-space: nowrap; border-right: 1px solid var(--border); }
+    .ticker-item:last-child { border-right: none; }
+    .ticker-logo { height: 28px; width: auto; max-width: 110px; object-fit: contain; filter: brightness(0) invert(1); opacity: .3; transition: opacity .2s; }
+    .ticker-track:hover .ticker-logo { opacity: .6; }
+
+    .scroll-hint { display: flex; flex-direction: column; align-items: center; gap: .7rem; opacity: 0; }
+    .scroll-hint-label { font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted2); }
+    .scroll-arrow-3d {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(79,142,247,.08); border: 1px solid rgba(79,142,247,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; color: var(--accent);
+      animation: scrollBob 2.4s ease-in-out infinite;
+    }
+    @keyframes scrollBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+    /* ── SECTIONS ──────────────────────────────────────────── */
+    .section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; width: 100%; }
+    .section + .section::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--border2) 30%, rgba(79,142,247,.18) 50%, var(--border2) 70%, transparent 100%);
+      margin-bottom: 5.5rem;
+    }
+    .section-inner { max-width: var(--max); margin: 0 auto; }
+
+    .sec-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.75rem; }
+    .sec-icon-wrap {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(var(--card), var(--card)) padding-box,
+                  linear-gradient(135deg, var(--accent), var(--teal)) border-box;
+      border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sec-h {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.03em; color: #fff;
+    }
+    .sec-heading-center { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2.75rem; gap: 1rem; }
+    .sec-heading-center .sec-h { color: var(--accent); }
+    .sec-sub { font-size: .95rem; font-weight: 300; color: var(--muted2); line-height: 1.75; max-width: 520px; text-align: center; }
+
+    /* ── ABOUT ─────────────────────────────────────────────── */
+    .about-grid { display: grid; grid-template-columns: 1fr 260px; gap: 5rem; align-items: start; }
+    .about-grid > * { min-width: 0; }
+    .about-text p { font-size: 1rem; font-weight: 300; color: rgba(240,240,240,.88); line-height: 1.9; margin-bottom: .95rem; }
+    .about-text strong { color: #fff; font-weight: 600; }
+    .about-text em { color: var(--accent2); font-style: normal; font-weight: 500; }
+    .about-text .callout {
+      font-size: 1.1rem; font-weight: 400; color: var(--accent2); line-height: 1.7;
+      border-left: 2px solid rgba(79,142,247,.4);
+      padding-left: 1.2rem; margin: 1.35rem 0;
+      transition: border-left-color .5s;
+    }
+    .about-text .callout.in-view { border-left-color: rgba(79,142,247,.8); }
+    .about-text .closing { font-size: 1.02rem; font-weight: 600; color: var(--accent2); margin-top: 1.35rem; }
+    .facts { display: flex; flex-direction: column; }
+    .fact { padding: .9rem 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .3rem; }
+    .fact:first-child { border-top: 1px solid var(--border); }
+    .fact-label { font-size: .58rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+    .fact-value { font-size: .85rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .goals-block { padding: 0; border: none; gap: .75rem; }
+    .goals-label { font-size: .72rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(110,231,183,.6); }
+    .goals-title { font-size: 1.6rem; font-weight: 800; color: var(--teal); letter-spacing: -.02em; font-family: 'Bricolage Grotesque', sans-serif; line-height: 1.2; }
+    .goals-sub { font-size: 1.25rem; font-weight: 700; color: var(--teal); letter-spacing: -.01em; font-family: 'Bricolage Grotesque', sans-serif; }
+
+    /* ── EXPERIENCE ────────────────────────────────────────── */
+    .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .exp-grid > * { min-width: 0; }
+    .exp-col-title { display: flex; align-items: center; gap: .8rem; font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; color: #fff; margin-bottom: 1.5rem; }
+    .exp-col-icon { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-dim); border: 1px solid rgba(79,142,247,.22); display: flex; align-items: center; justify-content: center; }
+    .exp-timeline { position: relative; padding-left: 1.5rem; }
+    .exp-timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 1px; background: var(--border); }
+    .exp-card { position: relative; padding: 0 0 1.25rem 1.5rem; }
+    .exp-card:last-child { padding-bottom: 0; }
+    .exp-card::before { content: ''; position: absolute; left: -4px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+    .exp-card-inner {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 3px solid rgba(79,142,247,.3);
+      border-radius: 14px; padding: 1rem 1.25rem;
+      transition: border-color .2s, background .2s, transform .2s, box-shadow .2s;
+    }
+    .exp-card-inner:hover { border-color: var(--border2); border-left-color: rgba(79,142,247,.65); background: #161616; transform: perspective(700px) rotateX(-1.5deg) translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .exp-card-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: .98rem; font-weight: 700; color: #fff; letter-spacing: -0.015em; margin-bottom: .4rem; line-height: 1.25; }
+    .exp-card-meta { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+    .exp-card-org { display: flex; align-items: center; gap: .3rem; font-size: .76rem; font-weight: 500; color: var(--muted2); }
+    .exp-card-org svg { opacity: .5; flex-shrink: 0; }
+    .exp-card-date { display: flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 600; color: var(--accent); }
+    .exp-card-date svg { opacity: .7; flex-shrink: 0; }
+    .exp-card-desc { font-size: .8rem; font-weight: 300; color: var(--muted2); line-height: 1.6; margin-top: .55rem; }
+    .exp-card-desc ul { list-style: none; display: flex; flex-direction: column; gap: .38rem; }
+    .exp-card-desc li { position: relative; padding-left: 1rem; }
+    .exp-card-desc li::before { content: '▸'; position: absolute; left: 0; top: .05em; color: var(--accent); font-size: .65rem; }
+    .exp-card-desc strong { color: rgba(240,240,240,.92); font-weight: 600; }
+
+    /* ── SKILLS ────────────────────────────────────────────── */
+    .skills-split { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: start; }
+    .skills-group { display: flex; flex-direction: column; gap: 1rem; }
+    .skills-group-label { display: flex; align-items: center; gap: .6rem; font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; margin-bottom: .25rem; }
+    .sgl-ai  { color: var(--accent); }
+    .sgl-ops { color: var(--teal); }
+    .skills-group-label-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sgl-ai  .skills-group-label-icon { background: rgba(79,142,247,.12);  border: 1px solid rgba(79,142,247,.25); }
+    .sgl-ops .skills-group-label-icon { background: rgba(110,231,183,.08); border: 1px solid rgba(110,231,183,.2); }
+    .skills-pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .sg-ai  .skills-pills { justify-content: flex-end; }
+    .sg-ops .skills-pills { justify-content: flex-start; }
+    .skill-pill {
+      display: inline-flex; align-items: center;
+      padding: .5rem 1.1rem; border-radius: 100px;
+      font-size: .82rem; font-weight: 500; white-space: nowrap;
+      cursor: default; transition: all .18s;
+      opacity: 0; transform: translateY(12px) scale(.88);
+    }
+    .skill-pill.pill-visible { opacity: 1; transform: none; transition: opacity .4s ease, transform .4s cubic-bezier(0.34,1.56,0.64,1); }
+    .sp-ai  { background: rgba(79,142,247,.1);  border: 1px solid rgba(79,142,247,.25);  color: var(--accent2); }
+    .sp-ai:hover  { background: rgba(79,142,247,.2);  border-color: rgba(79,142,247,.5);  transform: translateY(-2px); }
+    .sp-ops { background: rgba(110,231,183,.06); border: 1px solid rgba(110,231,183,.18); color: var(--teal); }
+    .sp-ops:hover { background: rgba(110,231,183,.14); border-color: rgba(110,231,183,.4); transform: translateY(-2px); }
+    .skills-bridge { display: flex; flex-direction: column; align-items: center; padding: 0 2.5rem; padding-top: 1.5rem; gap: 0; }
+    .sb-line, .sb-line2 { width: 1px; flex: 1; min-height: 40px; background: linear-gradient(to bottom, transparent, rgba(79,142,247,.35), rgba(110,231,183,.35), transparent); }
+    .sb-node {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--card); border: 1px solid rgba(79,142,247,.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; color: var(--accent);
+      box-shadow: 0 0 20px rgba(79,142,247,.2);
+      position: relative; flex-shrink: 0;
+      animation: nodePulse 3s ease-in-out infinite;
+    }
+    @keyframes nodePulse { 0%,100%{box-shadow:0 0 20px rgba(79,142,247,.2)} 50%{box-shadow:0 0 32px rgba(79,142,247,.45)} }
+    .sb-node::before {
+      content: ''; position: absolute; inset: -6px; border-radius: 50%;
+      border: 1px dashed rgba(79,142,247,.25);
+      animation: nodeRotate 8s linear infinite;
+    }
+    @keyframes nodeRotate { to { transform: rotate(360deg); } }
+
+    /* ── PROJECTS ───────────────────────────────────────────── */
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .proj-card {
+      position: relative; border-radius: var(--radius-card);
+      overflow: hidden; aspect-ratio: 16/10;
+      background: var(--card); border: 1px solid var(--border);
+      transition: border-color .3s;
+      transform-style: preserve-3d;
+      cursor: none;
+    }
+    /* holographic border on hover */
+    .proj-card::after {
+      content: ''; position: absolute; inset: -1px; z-index: -1;
+      border-radius: calc(var(--radius-card) + 1px);
+      background: linear-gradient(135deg, var(--holo-1), var(--holo-2), var(--holo-3));
+      opacity: 0; transition: opacity .4s ease;
+    }
+    .proj-card:hover::after { opacity: 1; }
+    .proj-cover { position: absolute; inset: 0; }
+    .proj-cover svg { width: 100%; height: 100%; }
+    .proj-badge {
+      position: absolute; top: 1rem; left: 1rem; z-index: 2;
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(8,8,8,.75); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      border: 1px solid var(--border2); padding: .35rem .9rem; border-radius: 100px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .06em;
+      font-family: 'JetBrains Mono', monospace; color: var(--muted2);
+    }
+    .proj-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pdot 2s ease-in-out infinite; }
+    .proj-status {
+      position: absolute; top: 1rem; right: 1rem; z-index: 2;
+      padding: .32rem .85rem; border-radius: 100px;
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      font-family: 'JetBrains Mono', monospace;
+      overflow: hidden; text-transform: uppercase;
+    }
+    .ps-build {
+      background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.35); color: var(--accent2);
+    }
+    .ps-build::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(79,142,247,.25), transparent);
+      transform: translateX(-100%); animation: shimmer 2.8s ease-in-out infinite;
+    }
+    @keyframes shimmer { to { transform: translateX(200%); } }
+    .ps-live    { background: rgba(110,231,183,.1); border: 1px solid rgba(110,231,183,.35); color: var(--teal); }
+    .proj-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(8,8,8,.97) 0%, rgba(8,8,8,.6) 45%, rgba(8,8,8,.05) 100%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem;
+    }
+    .proj-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: .45rem; }
+    .proj-desc  { font-size: .82rem; font-weight: 300; color: var(--muted2); line-height: 1.65; margin-bottom: .75rem; }
+    .proj-progress { height: 2px; background: rgba(255,255,255,.08); border-radius: 1px; margin-bottom: .35rem; }
+    .proj-progress-bar { height: 100%; width: var(--pct,0%); background: linear-gradient(90deg, var(--accent), var(--teal)); border-radius: 1px; }
+    .proj-progress-label { font-size: .68rem; font-weight: 500; color: var(--muted); letter-spacing: .04em; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── CONTACT ────────────────────────────────────────────── */
+    .contact-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .contact-tagline { max-width: 560px; font-size: 1rem; font-weight: 300; color: var(--muted2); line-height: 1.8; margin-bottom: 2.5rem; }
+    .contact-icon-cards { display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
+    .cic {
+      display: flex; flex-direction: column; align-items: center; gap: .75rem;
+      width: 130px; padding: 1.75rem 1rem; border-radius: 16px;
+      background: var(--card); border: 1px solid var(--border);
+      transition: background .2s, border-color .2s, transform .25s cubic-bezier(0.34,1.56,0.64,1);
+      cursor: none;
+    }
+    .cic:hover { background: #181818; border-color: rgba(79,142,247,.35); transform: translateY(-6px); }
+    .cic-icon { color: var(--accent); }
+    .cic-label { font-size: .8rem; font-weight: 600; color: var(--muted2); }
+    .contact-meta { display: flex; flex-direction: column; align-items: center; gap: .6rem; margin-bottom: 1.5rem; }
+    .contact-meta-item { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--muted2); }
+    .copy-email-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: transparent; border: 1px solid var(--border2); color: var(--muted2);
+      padding: .65rem 1.5rem; border-radius: 10px; font-size: .82rem; font-weight: 500;
+      cursor: none; font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all .2s;
+    }
+    .copy-email-btn:hover { border-color: rgba(255,255,255,.28); color: #fff; }
+    .copy-email-btn.copied { border-color: var(--teal); color: var(--teal); }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer { padding: 2rem 2.5rem; position: relative; z-index: 1; border-top: 1px solid var(--border); }
+    .footer-inner { max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: #fff; }
+    .footer-logo span { color: var(--accent); }
+    footer p { font-size: .78rem; color: var(--muted); }
+
+    /* ── FADE UTIL ──────────────────────────────────────────── */
+    .fade { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── REDUCED MOTION ─────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .skill-pill { opacity: 1 !important; transform: none !important; }
+      .hero-badge, .hero h1, .hero-sub, .hero-buttons, .logo-ticker, .scroll-hint { opacity: 1 !important; }
+      #webgl-canvas { display: none; }
+    }
+
+    /* ── FAIL / WIN MOTTO ──────────────────────────────────────── */
+    .motto-block {
+      position: absolute;
+      right: clamp(2.5rem, 7vw, 9rem);
+      top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: .28rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(.58rem, .9vw, .78rem);
+      letter-spacing: .22em; text-transform: uppercase;
+      user-select: none; pointer-events: none; z-index: 1;
+    }
+    .mf { color: #fff; font-weight: 400; }
+    .mf:nth-child(1)  { opacity: .07; }
+    .mf:nth-child(2)  { opacity: .09; }
+    .mf:nth-child(3)  { opacity: .11; }
+    .mf:nth-child(4)  { opacity: .13; }
+    .mf:nth-child(5)  { opacity: .15; }
+    .mf:nth-child(6)  { opacity: .18; }
+    .mf:nth-child(7)  { opacity: .21; }
+    .mf:nth-child(8)  { opacity: .25; }
+    .mf:nth-child(9)  { opacity: .30; }
+    .mf:nth-child(10) { opacity: .35; }
+    .mf:nth-child(11) { opacity: .42; }
+    .mw {
+      color: #fff; font-weight: 700;
+      opacity: 1; font-size: 1.05em;
+      margin-top: .2rem; letter-spacing: .18em;
+    }
+    @media (max-width: 1100px) { .motto-block { display: none; } }
+
+    /* ── RESPONSIVE: Tablet / iPad (≤900px) ────────────────── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-drawer { display: flex; }
+
+      .hero { padding: 80px 2rem 5rem; }
+      .hero h1 { font-size: clamp(2.8rem, 8vw, 4.5rem); }
+      .hero-badge {
+        font-size: .76rem; padding: .45rem 1.1rem;
+        white-space: normal; text-align: center;
+        justify-content: center; max-width: 90%;
+      }
+      .hero-sub { font-size: 1rem; max-width: 100%; }
+
+      .section { padding: 4.5rem 2rem; }
+      .section + .section::before { margin-bottom: 4.5rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .facts { border-top: 1px solid var(--border); padding-top: 1.5rem; }
+
+      .exp-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .exp-card-inner { padding: .9rem 1rem; }
+
+      /* iPad: 2-column projects */
+      .projects-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .proj-card { aspect-ratio: 16/10; }
+
+      .skills-split { grid-template-columns: 1fr; gap: 1.5rem; }
+      .sg-ai .skills-pills { justify-content: flex-start; }
+      .skills-bridge { display: none; }
+      .skills-group { gap: .75rem; }
+    }
+
+    /* ── RESPONSIVE: Mobile (≤600px) ───────────────────────── */
+    @media (max-width: 600px) {
+      nav { padding: 0 1.1rem; }
+      .hero { padding: 80px 1.1rem 4rem; }
+      .hero h1 { font-size: clamp(2.4rem, 10vw, 3.5rem); margin-bottom: 1.2rem; }
+      .hero-badge { font-size: .68rem; padding: .4rem .9rem; gap: .4rem; }
+      .hero-sub { font-size: .92rem; margin-bottom: 2rem; }
+      .hero-buttons { flex-direction: column; width: 100%; gap: .75rem; }
+      .btn { justify-content: center; width: 100%; }
+
+      .logo-ticker { margin-bottom: 2.5rem; padding: 1rem 0; }
+      .ticker-logo { height: 22px; }
+
+      .section { padding: 3.5rem 1.1rem; }
+      .section + .section::before { margin-bottom: 3.5rem; }
+
+      .sec-h { font-size: clamp(1.7rem, 6vw, 2.2rem); }
+      .sec-icon-wrap { width: 40px; height: 40px; font-size: .9rem; }
+
+      /* Mobile: single-column projects */
+      .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .proj-card { aspect-ratio: 4/3; }
+
+      .skill-pill { font-size: .74rem; padding: .38rem .85rem; }
+      .sec-sub { font-size: .88rem; }
+
+      .contact-icon-cards { gap: .65rem; }
+      .cic { width: 100px; padding: 1.25rem .75rem; gap: .6rem; }
+      .cic-icon svg { width: 20px; height: 20px; }
+      .cic-label { font-size: .74rem; }
+      .contact-tagline { font-size: .92rem; }
+      .copy-email-btn { font-size: .78rem; padding: .6rem 1.2rem; }
+
+      .footer-inner { flex-direction: column; gap: .5rem; text-align: center; }
+
+      .exp-col-title { font-size: 1.2rem; margin-bottom: .9rem; }
+      .exp-card-title { font-size: .9rem; }
+      .exp-card-desc { font-size: .78rem; }
+
+      .about-text p { font-size: .95rem; }
+      .about-text .callout { font-size: 1rem; padding-left: 1rem; }
+      .goals-title { font-size: 1.35rem; }
+      .goals-sub { font-size: 1.1rem; }
+    }
+
+    /* ── RESPONSIVE: Small phones (≤380px) ─────────────────── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: clamp(2rem, 11vw, 2.6rem); }
+      .cic { width: 88px; padding: 1rem .5rem; }
+      .contact-icon-cards { gap: .5rem; }
+    }
+
+    /* ── MOBILE: disable custom cursor ─────────────────────── */
+    @media (hover: none), (pointer: coarse) {
+      body.cursor-active { cursor: auto; }
+      .btn, .nav-hamburger, .copy-email-btn, .cic, .proj-card { cursor: pointer; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor (desktop only) -->
+<div class="cursor-dot"  id="cursor-dot"  aria-hidden="true"></div>
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+<!-- Three.js canvas (fixed background) -->
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+<!-- Ambient glow blobs -->
+<div class="bg-glow" aria-hidden="true"></div>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">David Vardic<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about"      data-sec="about">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        About Me</a></li>
+      <li><a href="#experience" data-sec="experience">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        Experience</a></li>
+      <li><a href="#skills"     data-sec="skills">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Skills</a></li>
+      <li><a href="#projects"   data-sec="projects">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Projects</a></li>
+      <li><a href="#contact"    data-sec="contact">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <a href="#about"      data-sec="about">About Me</a>
+  <a href="#experience" data-sec="experience">Experience</a>
+  <a href="#skills"     data-sec="skills">Skills</a>
+  <a href="#projects"   data-sec="projects">Projects</a>
+  <a href="#contact"    data-sec="contact">Contact</a>
+</div>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    <span id="badge-text"></span><span id="badge-text-cursor"></span>
+  </div>
+
+  <h1 id="hero-h1">Hi, I'm David.</h1>
+
+  <p class="hero-sub">
+    Production Engineer with a passion for <strong>AI and building things.</strong><br>
+    My goal: <strong>Driving Operations towards AI-powered and intelligent systems.</strong>
+  </p>
+
+  <div class="hero-buttons">
+    <a href="#projects" class="btn btn-primary">View My Work</a>
+    <a href="#contact"  class="btn btn-secondary">Let's Connect ↗</a>
+  </div>
+
+  <div class="logo-ticker">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-hint-label">Scroll to Explore</span>
+    <div class="scroll-arrow-3d">↓</div>
+  </div>
+
+  <!-- FAIL / WIN Motto — desktop only -->
+  <div class="motto-block" aria-hidden="true">
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mf">FAIL</span>
+    <span class="mw">WIN.</span>
+  </div>
+</section>
+
+<!-- ── ABOUT ────────────────────────────────────────────────── -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <h2 class="sec-h">My Mission</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="fade">Artificial intelligence is changing how humanity creates value. Yet while much of the conversation focuses on digital products, content generation, and software, some of the most important opportunities lie in the physical world — in factories, supply chains, production systems, and operations.</p>
+        <p class="fade">Over decades, companies have built extraordinary expertise in planning, manufacturing, and execution. These systems are complex, constraint-driven, and deeply human. AI doesn't replace that — it amplifies it.</p>
+        <p class="callout fade">I believe AI has the potential to make operational knowledge more accessible, decisions more informed, and execution more effective.</p>
+        <p class="fade">Building meaningful AI for industrial domains requires more than technical expertise. It requires process understanding, operational thinking, and a deep appreciation for how real-world systems work — where physical constraints, accumulated knowledge, and human judgment all matter.</p>
+        <p class="callout fade">My mission is to help build the bridge between operations and AI.</p>
+        <p class="fade">Europe has built its prosperity on engineering and operational excellence. I believe the next leap in competitiveness will come from combining these strengths with artificial intelligence — systems that perceive, reason, and act in the physical world.</p>
+        <p class="callout closing fade">Contributing to that future is what drives my work.</p>
+        <p class="fade">That's why I'm currently spending a lot of time exploring AI in Operations — working on projects that genuinely excite me, sharing them here, and staying open to feedback or collaboration. If something resonates, feel free to reach out. 😊</p>
+      </div>
+      <div class="facts">
+        <div class="fact goals-block fade">
+          <span class="goals-label">My Goals for 2026</span>
+          <span class="goals-title">🏁 Ship 3 AI Products</span>
+          <span class="goals-sub">✦ Open to Collaborations</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ────────────────────────────────────────────── -->
+<section class="section" id="experience">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <h2 class="sec-h">Experience</h2>
+    </div>
+    <div class="exp-grid">
+
+      <!-- Education -->
+      <div>
+        <div class="exp-col-title fade">
+          <div class="exp-col-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          Education
+        </div>
+        <div class="exp-timeline">
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">M.Eng. Technology Management</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>RWU Ravensburg-Weingarten</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Oct 2024 – Feb 2026</span>
+              </div>
+              <div class="exp-card-desc"><ul><li>Specialization: Business Optimization</li></ul></div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">B.Eng. Mechanical Engineering</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>DHBW Friedrichshafen</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Oct 2021 – Sep 2024</span>
+              </div>
+              <div class="exp-card-desc"><ul>
+                <li>Specialization: Production &amp; Management</li>
+                <li>Team Lead — Zukunftsfabrik Bodensee Initiative</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work -->
+      <div>
+        <div class="exp-col-title fade">
+          <div class="exp-col-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></svg>
+          </div>
+          Work
+        </div>
+        <div class="exp-timeline">
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Production Engineer</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>ZF Friedrichshafen AG</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 2026 – Present</span>
+              </div>
+              <div class="exp-card-desc"><ul>
+                <li>Planning and coordinating production processes and projects</li>
+                <li>Driving digitalization initiatives on the shop floor</li>
+                <li>Identifying where AI and smart systems can deliver measurable improvements</li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Master's Candidate — Operations Launch Management &amp; Strategy</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>ZF Friedrichshafen AG</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Sep 2025 – Feb 2026</span>
+              </div>
+              <div class="exp-card-desc"><ul>
+                <li>Thesis: "Strategic Development of Performance Analysis for Operations"</li>
+                <li>Corporate Strategy &amp; Launch Management division</li>
+                <li>Developing performance measurement frameworks across ZF's global production network</li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Working Student — Project Management</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>EBZ Sys Tec.</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Oct 2024 – Feb 2025</span>
+              </div>
+              <div class="exp-card-desc"><ul>
+                <li>Logistics planning for a plant integration project at Mercedes-Benz</li>
+                <li>Coordinating production timelines and material flows</li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Cooperative Study — 5 Departments</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>ZF Friedrichshafen AG</span>
+                <span class="exp-card-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Oct 2021 – Oct 2024</span>
+              </div>
+              <div class="exp-card-desc"><ul>
+                <li><strong>Systems Engineering</strong> — ODD analysis for autonomous vehicles</li>
+                <li><strong>Industrial Planning</strong> — Design &amp; investment analysis of a coating system</li>
+                <li><strong>E-Motor Systems Development</strong> — Vibration measurement process development for servo drives</li>
+                <li><strong>Semester Abroad — Solihull, UK</strong> — Digital Twin validation via Hardware-in-the-Loop testing</li>
+                <li><strong>Manufacturing Engineering</strong> — Bachelor's Thesis: Optimization of Production Processes for Ring Gears</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ─────────────────────────────────────────────────── -->
+<section class="section" id="skills">
+  <div class="section-inner">
+    <div class="sec-heading-center fade">
+      <div class="sec-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <h2 class="sec-h">Technical Expertise</h2>
+      <p class="sec-sub">The tools, methods, and systems I work with — spanning AI engineering and industrial operations.</p>
+    </div>
+    <div class="skills-split">
+      <div class="skills-group sg-ai fade">
+        <div class="skills-group-label sgl-ai">
+          <div class="skills-group-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          AI &amp; Engineering
+        </div>
+        <div class="skills-pills">
+          <span class="skill-pill sp-ai">Agentic AI</span>
+          <span class="skill-pill sp-ai">Machine Learning</span>
+          <span class="skill-pill sp-ai">Python</span>
+          <span class="skill-pill sp-ai">RAG</span>
+          <span class="skill-pill sp-ai">Statistics</span>
+          <span class="skill-pill sp-ai">Mathematics</span>
+          <span class="skill-pill sp-ai">REST API</span>
+          <span class="skill-pill sp-ai">Process Automation</span>
+          <span class="skill-pill sp-ai">Claude Code</span>
+          <span class="skill-pill sp-ai">Claude Cowork</span>
+          <span class="skill-pill sp-ai">n8n</span>
+          <span class="skill-pill sp-ai">Microsoft Automate</span>
+        </div>
+      </div>
+      <div class="skills-bridge">
+        <div class="sb-line"></div>
+        <div class="sb-node">⊕</div>
+        <div class="sb-line2"></div>
+      </div>
+      <div class="skills-group sg-ops fade">
+        <div class="skills-group-label sgl-ops">
+          <div class="skills-group-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+          Operations &amp; Production
+        </div>
+        <div class="skills-pills">
+          <span class="skill-pill sp-ops">Lean Management</span>
+          <span class="skill-pill sp-ops">MRP / MRP II</span>
+          <span class="skill-pill sp-ops">TPM</span>
+          <span class="skill-pill sp-ops">Operations Performance Analysis</span>
+          <span class="skill-pill sp-ops">Launch Management</span>
+          <span class="skill-pill sp-ops">Production Planning</span>
+          <span class="skill-pill sp-ops">Design of Experiments (DoE)</span>
+          <span class="skill-pill sp-ops">Value Stream Planning</span>
+          <span class="skill-pill sp-ops">SAP</span>
+          <span class="skill-pill sp-ops">Industrie 4.0</span>
+          <span class="skill-pill sp-ops">Supply Chain Management</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ───────────────────────────────────────────────── -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <h2 class="sec-h">Featured Projects</h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- ================================================================
+           PROJECT 1: AI-Based MRP / MRP II System
+           Editable: proj-title, proj-desc, --pct (progress %), ps-build badge
+           ================================================================ -->
+      <div class="proj-card fade" data-project="mrp">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="mrp-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d0e18"/>
+      <stop offset="100%" stop-color="#11121f"/>
+    </linearGradient>
+    <linearGradient id="mrp-node" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#3730a3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="360" fill="url(#mrp-bg)"/>
+
+  <!-- Header bar -->
+  <rect width="640" height="40" fill="#0f1020"/>
+  <rect y="40" width="640" height="1" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Logo -->
+  <rect x="16" y="11" width="18" height="18" rx="4" fill="#4f46e5"/>
+  <text x="14" y="24" font-family="system-ui,sans-serif" font-size="11" fill="#fff" font-weight="700" text-anchor="start" dx="22">MRP Platform</text>
+
+  <!-- Nav tabs -->
+  <text x="160" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,205,255,0.35)">Dashboard</text>
+  <text x="224" y="25" font-family="system-ui,sans-serif" font-size="10" fill="#818cf8" font-weight="600">BOM Explorer</text>
+  <rect x="222" y="38" width="74" height="2" rx="1" fill="#6366f1"/>
+  <text x="312" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,205,255,0.35)">Orders</text>
+  <text x="360" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,205,255,0.35)">AI Insights</text>
+
+  <!-- Status pill -->
+  <rect x="558" y="13" width="66" height="16" rx="8" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+  <circle cx="569" cy="21" r="3" fill="#10b981"/>
+  <text x="575" y="25" font-family="system-ui,sans-serif" font-size="8.5" fill="#10b981" font-weight="500">Live Sync</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="41" width="136" height="319" fill="#0c0d1a"/>
+  <rect x="136" y="41" width="1" height="319" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- Sidebar active item -->
+  <rect x="8" y="50" width="120" height="26" rx="5" fill="rgba(99,102,241,0.12)"/>
+  <text x="24" y="67" font-family="system-ui,sans-serif" font-size="9.5" fill="#818cf8" font-weight="500">BOM Structure</text>
+
+  <!-- Sidebar items -->
+  <text x="24" y="96" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Net Requirements</text>
+  <text x="24" y="117" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Planned Orders</text>
+  <text x="24" y="138" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Supplier Risk</text>
+  <text x="24" y="159" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Lead Times</text>
+
+  <rect x="16" y="175" width="104" height="1" fill="rgba(255,255,255,0.05)"/>
+  <text x="24" y="192" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,205,255,0.22)" letter-spacing="1.2">AI MODULES</text>
+  <text x="24" y="211" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Risk Detection</text>
+  <text x="24" y="232" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Demand Forecast</text>
+  <text x="24" y="253" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.38)">Reorder Advisor</text>
+
+  <!-- Section label -->
+  <text x="154" y="60" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,205,255,0.3)" letter-spacing="1">BOM STRUCTURE · FG-4521</text>
+
+  <!-- BOM Tree -->
+  <!-- Root -->
+  <rect x="245" y="67" width="106" height="32" rx="6" fill="url(#mrp-node)"/>
+  <text x="298" y="85" font-family="system-ui,sans-serif" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">FG-4521</text>
+  <text x="298" y="96" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">Finished Good · Qty 400</text>
+
+  <!-- Connectors L1 -->
+  <line x1="298" y1="99" x2="298" y2="110" stroke="rgba(99,102,241,0.35)" stroke-width="1.5"/>
+  <line x1="205" y1="110" x2="391" y2="110" stroke="rgba(99,102,241,0.35)" stroke-width="1.5"/>
+  <line x1="205" y1="110" x2="205" y2="120" stroke="rgba(99,102,241,0.35)" stroke-width="1.5"/>
+  <line x1="391" y1="110" x2="391" y2="120" stroke="rgba(99,102,241,0.35)" stroke-width="1.5"/>
+
+  <!-- L1 nodes -->
+  <rect x="156" y="120" width="98" height="28" rx="5" fill="rgba(79,70,229,0.14)" stroke="rgba(99,102,241,0.22)" stroke-width="1"/>
+  <text x="205" y="138" font-family="system-ui,sans-serif" font-size="9" fill="#a5b4fc" text-anchor="middle" font-weight="500">Sub-Assembly A</text>
+
+  <rect x="342" y="120" width="98" height="28" rx="5" fill="rgba(79,70,229,0.14)" stroke="rgba(99,102,241,0.22)" stroke-width="1"/>
+  <text x="391" y="138" font-family="system-ui,sans-serif" font-size="9" fill="#a5b4fc" text-anchor="middle" font-weight="500">Sub-Assembly B</text>
+
+  <!-- Connectors L2 left -->
+  <line x1="205" y1="148" x2="205" y2="156" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="172" y1="156" x2="238" y2="156" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="172" y1="156" x2="172" y2="164" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="238" y1="156" x2="238" y2="164" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+
+  <!-- Connectors L2 right -->
+  <line x1="391" y1="148" x2="391" y2="156" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="358" y1="156" x2="424" y2="156" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="358" y1="156" x2="358" y2="164" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+  <line x1="424" y1="156" x2="424" y2="164" stroke="rgba(99,102,241,0.2)" stroke-width="1"/>
+
+  <!-- L2 nodes -->
+  <rect x="142" y="164" width="60" height="20" rx="4" fill="rgba(15,16,30,0.9)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="172" y="178" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(165,180,252,0.55)" text-anchor="middle">Raw Mat. 1</text>
+
+  <rect x="208" y="164" width="60" height="20" rx="4" fill="rgba(15,16,30,0.9)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="238" y="178" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(165,180,252,0.55)" text-anchor="middle">Component X</text>
+
+  <rect x="328" y="164" width="60" height="20" rx="4" fill="rgba(15,16,30,0.9)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="358" y="178" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(165,180,252,0.55)" text-anchor="middle">Raw Mat. 2</text>
+
+  <rect x="394" y="164" width="60" height="20" rx="4" fill="rgba(15,16,30,0.9)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="424" y="178" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(165,180,252,0.55)" text-anchor="middle">Component Y</text>
+
+  <!-- Divider -->
+  <rect x="148" y="200" width="476" height="1" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- MRP Results card -->
+  <rect x="148" y="210" width="224" height="132" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="165" y="229" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,205,255,0.28)" letter-spacing="1" font-weight="600">MRP CALCULATION</text>
+
+  <text x="165" y="250" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.5)">Gross Requirements</text>
+  <text x="362" y="250" font-family="system-ui,sans-serif" font-size="9.5" fill="#c7d2fe" text-anchor="end" font-weight="500">450 units</text>
+
+  <text x="165" y="268" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.5)">Stock on Hand</text>
+  <text x="362" y="268" font-family="system-ui,sans-serif" font-size="9.5" fill="#c7d2fe" text-anchor="end" font-weight="500">80 units</text>
+
+  <rect x="165" y="275" width="197" height="1" fill="rgba(255,255,255,0.06)"/>
+
+  <text x="165" y="291" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.5)">Net Requirements</text>
+  <text x="362" y="291" font-family="system-ui,sans-serif" font-size="10" fill="#818cf8" text-anchor="end" font-weight="600">370 units</text>
+
+  <text x="165" y="309" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.5)">Planned Order Qty</text>
+  <text x="362" y="309" font-family="system-ui,sans-serif" font-size="10" fill="#a5b4fc" text-anchor="end" font-weight="600">400 units</text>
+
+  <rect x="165" y="316" width="197" height="1" fill="rgba(255,255,255,0.04)"/>
+  <text x="165" y="330" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,205,255,0.22)">Lead time: 5 working days · Auto-generated</text>
+
+  <!-- AI Risk card -->
+  <rect x="384" y="210" width="240" height="132" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="400" y="229" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,205,255,0.28)" letter-spacing="1" font-weight="600">AI RISK DETECTION</text>
+
+  <!-- Risk row 1 - green -->
+  <rect x="400" y="237" width="3" height="30" rx="1.5" fill="#10b981"/>
+  <text x="411" y="250" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.75)" font-weight="500">Supply Chain</text>
+  <rect x="578" y="237" width="38" height="16" rx="4" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+  <text x="597" y="249" font-family="system-ui,sans-serif" font-size="8" fill="#10b981" text-anchor="middle">Stable</text>
+  <text x="411" y="263" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,205,255,0.3)">All suppliers operating normally</text>
+
+  <!-- Risk row 2 - amber -->
+  <rect x="400" y="277" width="3" height="30" rx="1.5" fill="#fbbf24"/>
+  <text x="411" y="290" font-family="system-ui,sans-serif" font-size="9.5" fill="rgba(200,205,255,0.75)" font-weight="500">Lead Time Alert</text>
+  <rect x="566" y="277" width="50" height="16" rx="4" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+  <text x="591" y="289" font-family="system-ui,sans-serif" font-size="8" fill="#fbbf24" text-anchor="middle">+2 days</text>
+  <text x="411" y="303" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,205,255,0.3)">Supplier A delay detected</text>
+
+  <rect x="400" y="318" width="218" height="1" fill="rgba(255,255,255,0.05)"/>
+  <text x="400" y="332" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,205,255,0.22)">Confidence 91% · Updated 2 min ago</text>
+</svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>MRP · AI</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">AI-Based MRP / MRP II System</div>
+          <div class="proj-desc">BOM explosion, net requirements, order generation &amp; real-time supply risk detection powered by AI.</div>
+          <!-- EDITABLE: change --pct value to update progress -->
+          <div class="proj-progress"><div class="proj-progress-bar" style="--pct:35%"></div></div>
+          <span class="proj-progress-label">In Build · 35% complete</span>
+        </div>
+      </div>
+
+      <!-- ================================================================
+           PROJECT 2: Algorithmic Line Balancing
+           Editable: proj-title, proj-desc, --pct (progress %), ps-build badge
+           ================================================================ -->
+      <div class="proj-card fade" data-project="linebalancing">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="lb-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c0e14"/>
+      <stop offset="100%" stop-color="#0f1119"/>
+    </linearGradient>
+    <linearGradient id="bar-ok" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <linearGradient id="bar-warn" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="bar-after" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="360" fill="url(#lb-bg)"/>
+
+  <!-- Header bar -->
+  <rect width="640" height="40" fill="#0e1018"/>
+  <rect y="40" width="640" height="1" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Logo -->
+  <rect x="16" y="11" width="18" height="18" rx="4" fill="#0d9488"/>
+  <text x="42" y="24" font-family="system-ui,sans-serif" font-size="11" fill="#fff" font-weight="700">LineBalance AI</text>
+
+  <!-- Nav tabs -->
+  <text x="178" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,215,210,0.35)">Dashboard</text>
+  <text x="240" y="25" font-family="system-ui,sans-serif" font-size="10" fill="#2dd4bf" font-weight="600">Line View</text>
+  <rect x="238" y="38" width="56" height="2" rx="1" fill="#0d9488"/>
+  <text x="310" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,215,210,0.35)">Optimizer</text>
+  <text x="370" y="25" font-family="system-ui,sans-serif" font-size="10" fill="rgba(200,215,210,0.35)">Reports</text>
+
+  <!-- AI badge -->
+  <rect x="542" y="12" width="82" height="17" rx="8" fill="rgba(45,212,191,0.1)" stroke="rgba(45,212,191,0.2)" stroke-width="1"/>
+  <text x="583" y="24" font-family="system-ui,sans-serif" font-size="8.5" fill="#2dd4bf" text-anchor="middle" font-weight="500">AI Optimised</text>
+
+  <!-- Section label + takt info -->
+  <text x="20" y="60" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,215,210,0.28)" letter-spacing="1">PRODUCTION LINE A · ASSEMBLY</text>
+  <text x="620" y="60" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,215,210,0.28)" text-anchor="end">Takt: 58s</text>
+
+  <!-- Takt time reference line -->
+  <line x1="20" y1="168" x2="620" y2="168" stroke="rgba(45,212,191,0.2)" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="622" y="172" font-family="system-ui,sans-serif" font-size="7.5" fill="rgba(45,212,191,0.45)">TAKT</text>
+
+  <!-- Station bars (6 stations) -->
+  <!-- ST-01: 78% -->
+  <rect x="22" y="100" width="82" height="20" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="22" y="122" width="82" height="46" rx="3" fill="url(#bar-ok)" opacity="0.75"/>
+  <text x="63" y="93" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.6)" text-anchor="middle">78%</text>
+  <text x="63" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">ST-01</text>
+
+  <!-- ST-02: 85% -->
+  <rect x="120" y="100" width="82" height="20" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="120" y="117" width="82" height="51" rx="3" fill="url(#bar-ok)" opacity="0.8"/>
+  <text x="161" y="93" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.6)" text-anchor="middle">85%</text>
+  <text x="161" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">ST-02</text>
+
+  <!-- ST-03: 79% -->
+  <rect x="218" y="100" width="82" height="20" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="218" y="121" width="82" height="47" rx="3" fill="url(#bar-ok)" opacity="0.75"/>
+  <text x="259" y="93" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.6)" text-anchor="middle">79%</text>
+  <text x="259" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">ST-03</text>
+
+  <!-- ST-04: 96% BOTTLENECK -->
+  <rect x="316" y="100" width="82" height="20" rx="3" fill="rgba(251,191,36,0.06)" stroke="rgba(251,191,36,0.18)" stroke-width="1"/>
+  <rect x="316" y="110" width="82" height="58" rx="3" fill="url(#bar-warn)" opacity="0.65"/>
+  <text x="357" y="93" font-family="system-ui,sans-serif" font-size="9" fill="#fbbf24" text-anchor="middle" font-weight="600">96% ⚠</text>
+  <text x="357" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(251,191,36,0.55)" text-anchor="middle" font-weight="500">ST-04</text>
+
+  <!-- ST-05: 74% -->
+  <rect x="414" y="100" width="82" height="20" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="414" y="124" width="82" height="44" rx="3" fill="url(#bar-ok)" opacity="0.7"/>
+  <text x="455" y="93" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.6)" text-anchor="middle">74%</text>
+  <text x="455" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">ST-05</text>
+
+  <!-- ST-06: 82% -->
+  <rect x="512" y="100" width="82" height="20" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="512" y="119" width="82" height="49" rx="3" fill="url(#bar-ok)" opacity="0.78"/>
+  <text x="553" y="93" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.6)" text-anchor="middle">82%</text>
+  <text x="553" y="112" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">ST-06</text>
+
+  <!-- Flow arrows between stations -->
+  <line x1="104" y1="158" x2="116" y2="158" stroke="rgba(45,212,191,0.25)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="202" y1="158" x2="214" y2="158" stroke="rgba(45,212,191,0.25)" stroke-width="1.5"/>
+  <line x1="300" y1="158" x2="312" y2="158" stroke="rgba(45,212,191,0.25)" stroke-width="1.5"/>
+  <line x1="398" y1="158" x2="410" y2="158" stroke="rgba(45,212,191,0.25)" stroke-width="1.5"/>
+  <line x1="496" y1="158" x2="508" y2="158" stroke="rgba(45,212,191,0.25)" stroke-width="1.5"/>
+
+  <!-- Divider -->
+  <rect x="20" y="186" width="600" height="1" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- AI Optimization results panel -->
+  <rect x="20" y="196" width="600" height="146" rx="8" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <text x="36" y="215" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(200,215,210,0.28)" letter-spacing="1" font-weight="600">PRODUCTION LINE OPTIMIZATION</text>
+
+  <!-- Before row -->
+  <text x="36" y="236" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.4)">Before</text>
+  <rect x="84" y="228" width="340" height="14" rx="3" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="84" y="228" width="306" height="14" rx="3" fill="rgba(239,68,68,0.25)"/>
+  <text x="432" y="239" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(248,113,113,0.8)" font-weight="500">Imbalance 38%</text>
+
+  <!-- After row -->
+  <text x="36" y="260" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.4)">After</text>
+  <rect x="84" y="252" width="340" height="14" rx="3" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="84" y="252" width="94" height="14" rx="3" fill="rgba(16,185,129,0.3)"/>
+  <text x="432" y="263" font-family="system-ui,sans-serif" font-size="8.5" fill="#34d399" font-weight="500">Imbalance 7%</text>
+
+  <!-- Metrics row -->
+  <rect x="36" y="278" width="580" height="1" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- Metric chips -->
+  <rect x="36" y="287" width="120" height="36" rx="6" fill="rgba(45,212,191,0.06)" stroke="rgba(45,212,191,0.12)" stroke-width="1"/>
+  <text x="96" y="303" font-family="system-ui,sans-serif" font-size="15" fill="#2dd4bf" text-anchor="middle" font-weight="700">↑ 18%</text>
+  <text x="96" y="316" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">Throughput</text>
+
+  <rect x="168" y="287" width="120" height="36" rx="6" fill="rgba(99,102,241,0.06)" stroke="rgba(99,102,241,0.12)" stroke-width="1"/>
+  <text x="228" y="303" font-family="system-ui,sans-serif" font-size="15" fill="#818cf8" text-anchor="middle" font-weight="700">↓ 31%</text>
+  <text x="228" y="316" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">Idle Time</text>
+
+  <rect x="300" y="287" width="120" height="36" rx="6" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.12)" stroke-width="1"/>
+  <text x="360" y="303" font-family="system-ui,sans-serif" font-size="15" fill="#34d399" text-anchor="middle" font-weight="700">−11s</text>
+  <text x="360" y="316" font-family="system-ui,sans-serif" font-size="8" fill="rgba(200,215,210,0.4)" text-anchor="middle">Cycle Time</text>
+
+  <text x="445" y="300" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.3)">Algorithm: Genetic + Simulated Annealing</text>
+  <text x="445" y="315" font-family="system-ui,sans-serif" font-size="9" fill="rgba(200,215,210,0.25)">Iterations: 12,400 · Solved in 2.3s</text>
+</svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>Optimization · Algorithm</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">Algorithmic Line Balancing</div>
+          <div class="proj-desc">Algorithmically distributes tasks across workstations to minimise idle time and balance takt across the line.</div>
+          <!-- EDITABLE: change --pct value to update progress -->
+          <div class="proj-progress"><div class="proj-progress-bar" style="--pct:20%"></div></div>
+          <span class="proj-progress-label">In Build · 20% complete</span>
+        </div>
+      </div>
+
+      <!-- ================================================================
+           ADD NEW PROJECT: copy a proj-card block above and paste here.
+           Change: data-project, SVG illustration, proj-badge text,
+                   ps-build/ps-live class, proj-title, proj-desc, --pct value.
+           ================================================================ -->
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ────────────────────────────────────────────────── -->
+<section class="section" id="contact">
+  <div class="section-inner">
+    <div class="contact-center">
+      <div class="sec-heading fade" style="justify-content:center;">
+        <div class="sec-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </div>
+        <h2 class="sec-h">Connect With Me</h2>
+      </div>
+      <p class="contact-tagline fade">Feel free to reach out — whether you want to discuss ideas around these projects, talk about AI in Operations, explore a collaboration, or just have an interesting conversation.</p>
+
+      <div class="contact-icon-cards">
+        <a href="https://github.com/davidvardic" target="_blank" rel="noopener" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </div>
+          <span class="cic-label">GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/davidvardic/" target="_blank" rel="noopener" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <span class="cic-label">LinkedIn</span>
+        </a>
+        <a href="mailto:davidvrdc01@gmail.com" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <span class="cic-label">Email</span>
+        </a>
+      </div>
+
+      <div class="contact-meta fade">
+        <div class="contact-meta-item">📍 <span>Baden-Württemberg, Germany</span></div>
+      </div>
+      <button class="copy-email-btn fade" id="copy-email-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copy-label">Copy Email Address</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">David Vardic<span>.</span></div>
+    <p>© 2026 David Vardic · All Rights Reserved</p>
+  </div>
+</footer>
+
+<!-- ── GSAP ────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<!-- ── THREE.JS SCENE ─────────────────────────────────────────── -->
+<script type="module">
+import * as THREE from 'three';
+
+const canvas = document.getElementById('webgl-canvas');
+const isMobile = window.innerWidth < 768;
+const PARTICLE_COUNT = isMobile ? 600 : 1400;
+
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 22);
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+scene.add(ambientLight);
+const blueLight = new THREE.PointLight(0x4f8ef7, 1.2);
+blueLight.position.set(5, 5, 5);
+scene.add(blueLight);
+const tealLight = new THREE.PointLight(0x6ee7b7, 0.8);
+tealLight.position.set(-5, -3, -5);
+scene.add(tealLight);
+
+// ── PARTICLE FIELD ───────────────────────────────────────────
+const positions  = new Float32Array(PARTICLE_COUNT * 3);
+const phases     = new Float32Array(PARTICLE_COUNT);
+const colors     = new Float32Array(PARTICLE_COUNT * 3);
+const sizes      = new Float32Array(PARTICLE_COUNT);
+
+const colBlue   = new THREE.Color(0x4f8ef7);
+const colTeal   = new THREE.Color(0x6ee7b7);
+const colViolet = new THREE.Color(0x9370db);
+
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const r     = Math.random() * 18;
+  const theta = Math.random() * Math.PI * 2;
+  const phi   = Math.acos((Math.random() * 2) - 1);
+  positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+  positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.35;
+  positions[i * 3 + 2] = r * Math.cos(phi);
+  phases[i] = Math.random() * Math.PI * 2;
+  sizes[i]  = 0.04 + Math.random() * 0.08;
+  const t = Math.random();
+  const c = t < 0.15 ? colViolet : t < 0.55 ? colBlue : colTeal;
+  colors[i * 3]     = c.r + (Math.random() - 0.5) * 0.15;
+  colors[i * 3 + 1] = c.g + (Math.random() - 0.5) * 0.15;
+  colors[i * 3 + 2] = c.b + (Math.random() - 0.5) * 0.15;
+}
+
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+pGeo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+const pMat = new THREE.PointsMaterial({
+  size: 0.07, vertexColors: true,
+  transparent: true, opacity: 0.38,
+  sizeAttenuation: true, depthWrite: false,
+});
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+// ── GEOMETRIC NETWORK (desktop only) ─────────────────────────
+const nodeGroup = new THREE.Group();
+const NODE_COUNT = 12;
+const nodeData   = [];
+
+if (false) { // geometric network disabled for cleaner look
+  const icoGeo = new THREE.IcosahedronGeometry(0.18, 0);
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const mat = new THREE.MeshPhongMaterial({
+      color: i % 2 === 0 ? 0x4f8ef7 : 0x6ee7b7,
+      transparent: true, opacity: 0.6, wireframe: false,
+    });
+    const mesh = new THREE.Mesh(icoGeo, mat);
+    const basePos = new THREE.Vector3(
+      (Math.random() - 0.5) * 20,
+      (Math.random() - 0.5) * 6,
+      (Math.random() - 0.5) * 8
+    );
+    mesh.position.copy(basePos);
+    nodeGroup.add(mesh);
+    nodeData.push({ mesh, base: basePos.clone(), freq: 0.3 + Math.random() * 0.5, phase: Math.random() * Math.PI * 2 });
+  }
+
+  // Edges (connect nearby node pairs)
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0x4f8ef7, transparent: true, opacity: 0.18 });
+  for (let i = 0; i < NODE_COUNT; i++) {
+    for (let j = i + 1; j < NODE_COUNT; j++) {
+      if (nodeData[i].base.distanceTo(nodeData[j].base) < 9) {
+        const eGeo = new THREE.BufferGeometry().setFromPoints([nodeData[i].base, nodeData[j].base]);
+        nodeGroup.add(new THREE.Line(eGeo, edgeMat));
+      }
+    }
+  }
+  scene.add(nodeGroup);
+}
+
+// ── MOUSE PARALLAX ───────────────────────────────────────────
+let mouseX = 0, mouseY = 0;
+let camX = 0, camY = 0;
+window.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+}, { passive: true });
+
+// ── SCROLL REACTIVITY ────────────────────────────────────────
+let scrollProgress = 0;
+window.addEventListener('scroll', () => {
+  scrollProgress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+}, { passive: true });
+
+// ── RESIZE ───────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── ANIMATION LOOP ───────────────────────────────────────────
+let visible = true;
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
+
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  if (!visible) return;
+  t += 0.008;
+
+  // Rotate particles
+  particles.rotation.y = t * 0.04 + scrollProgress * Math.PI * 0.5;
+
+  // Float individual particles
+  const pos = pGeo.attributes.position;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    pos.array[i * 3 + 1] += Math.sin(t + phases[i]) * 0.002;
+  }
+  pos.needsUpdate = true;
+
+  // Particle opacity fades as you scroll
+  pMat.opacity = 0.38 - scrollProgress * 0.2;
+
+  // Animate network nodes
+  if (!isMobile) {
+    nodeData.forEach(n => {
+      n.mesh.position.x = n.base.x + Math.sin(t * n.freq + n.phase) * 0.6;
+      n.mesh.position.y = n.base.y + Math.cos(t * n.freq * 0.7 + n.phase) * 0.4;
+      n.mesh.rotation.x = t * 0.4;
+      n.mesh.rotation.y = t * 0.3;
+    });
+  }
+
+  // Camera parallax (smooth)
+  camX += (mouseX * 1.5 - camX) * 0.04;
+  camY += (-mouseY * 1.0 - camY) * 0.04;
+  camera.position.x = camX;
+  camera.position.y = camY;
+  camera.lookAt(scene.position);
+
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+
+<!-- ── MAIN SCRIPT ────────────────────────────────────────────── -->
+<script>
+(function() {
+  'use strict';
+
+  // ── 1. CUSTOM CURSOR ───────────────────────────────────────
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (hasHover) {
+    document.body.classList.add('cursor-active');
+    let cx = 0, cy = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      cx = e.clientX; cy = e.clientY;
+      dot.style.transform  = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
+    }, { passive: true });
+
+    (function lerpRing() {
+      rx += (cx - rx) * 0.12;
+      ry += (cy - ry) * 0.12;
+      ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+      requestAnimationFrame(lerpRing);
+    })();
+
+    document.querySelectorAll('a, button, .proj-card, .cic, .skill-pill').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+    });
+  }
+
+  // ── 2. BADGE TYPEWRITER ────────────────────────────────────
+  (function() {
+    const el     = document.getElementById('badge-text');
+    const cursor = document.getElementById('badge-text-cursor');
+    if (!el) return;
+    const text = 'Operations Engineer  –  AI Feature Developer';
+    let i = 0;
+    function type() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i++);
+        setTimeout(type, i === 1 ? 400 : 55 + Math.random() * 25);
+      } else {
+        setTimeout(() => {
+          cursor.style.transition = 'opacity 1s ease';
+          cursor.style.opacity = '0';
+          setTimeout(() => cursor.remove(), 1100);
+        }, 2200);
+      }
+    }
+    setTimeout(type, 700);
+  })();
+
+  // ── 3. LOGO TICKER ─────────────────────────────────────────
+  (function() {
+    const logos = [
+      { src: 'https://upload.wikimedia.org/wikipedia/de/thumb/3/35/DHBW_logo.svg/200px-DHBW_logo.svg.png', name: 'DHBW Friedrichshafen' },
+      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/RWU_Logo_cmyk.svg/320px-RWU_Logo_cmyk.svg.png', name: 'RWU Ravensburg-Weingarten' },
+      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/ZF_logo.svg/200px-ZF_logo.svg.png', name: 'ZF Friedrichshafen AG' },
+    ];
+    const track = document.getElementById('ticker-track');
+    [0, 1].forEach(() => logos.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'ticker-item';
+      const img = document.createElement('img');
+      img.className = 'ticker-logo';
+      img.src = item.src; img.alt = item.name;
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.onerror = function() { this.style.display = 'none'; };
+      div.appendChild(img);
+      track.appendChild(div);
+    }));
+  })();
+
+  // ── 4. HERO ANIMATION (GSAP) ──────────────────────────────
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Helper: split h1 into char spans; last word gets accent gradient
+  function splitChars(el) {
+    const text = el.textContent;
+    const words = text.split(' ');
+    el.textContent = '';
+    words.forEach((word, wi) => {
+      const isLast = wi === words.length - 1;
+      [...word].forEach(ch => {
+        const s = document.createElement('span');
+        s.className = isLast ? 'char char-accent' : 'char';
+        s.textContent = ch;
+        el.appendChild(s);
+      });
+      if (wi < words.length - 1) {
+        const sp = document.createElement('span');
+        sp.style.display = 'inline';
+        sp.textContent = ' ';
+        el.appendChild(sp);
+      }
+    });
+    return el.querySelectorAll('.char');
+  }
+
+  if (!prefersReduced && window.gsap) {
+    // Hero 3D character flip-in
+    const h1 = document.getElementById('hero-h1');
+    const chars = splitChars(h1);
+    gsap.set(h1, { opacity: 1 });
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    heroTl
+      .to('.hero-badge',   { opacity: 1, duration: 0.7, delay: 0.4 })
+      .fromTo(chars,
+        { opacity: 0, y: 60, rotateX: -50, transformPerspective: 800 },
+        { opacity: 1, y: 0, rotateX: 0, stagger: 0.035, duration: 0.85, ease: 'back.out(1.4)' },
+        '-=0.3')
+      .to('.hero-sub',     { opacity: 1, duration: 0.8 }, '-=0.5')
+      .to('.hero-buttons', { opacity: 1, duration: 0.7 }, '-=0.5')
+      .to('.logo-ticker',  { opacity: 1, duration: 0.6 }, '-=0.4')
+      .to('.scroll-hint',  { opacity: 1, duration: 0.5 }, '-=0.3');
+  } else {
+    // No animation: reveal hero immediately
+    document.querySelectorAll('.hero-badge,.hero h1,.hero-sub,.hero-buttons,.logo-ticker,.scroll-hint').forEach(el => {
+      el.style.opacity = '1';
+    });
+    const h1 = document.getElementById('hero-h1');
+    if (h1) splitChars(h1);
+  }
+
+  // ── 5. SECTION SCROLL REVEALS (IntersectionObserver) ───────
+  // Reliable approach: CSS transitions triggered by class addition
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+
+  // Safety net: show all hidden elements after 2.5s regardless
+  setTimeout(() => {
+    document.querySelectorAll('.fade:not(.visible)').forEach(el => el.classList.add('visible'));
+  }, 2500);
+
+  // ── 5b. SKILL PILLS STAGGER ────────────────────────────────
+  const pillsObs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      document.querySelectorAll('.skill-pill').forEach((p, i) => {
+        setTimeout(() => p.classList.add('pill-visible'), i * 50);
+      });
+      pillsObs.disconnect();
+    }
+  }, { threshold: 0.05 });
+  const skillsEl = document.getElementById('skills');
+  if (skillsEl) pillsObs.observe(skillsEl);
+  setTimeout(() => document.querySelectorAll('.skill-pill:not(.pill-visible)').forEach(p => p.classList.add('pill-visible')), 3000);
+
+  // ── 6. PROJECT CARD 3D TILT ────────────────────────────────
+  const isTouchDevice = !window.matchMedia('(hover: hover)').matches;
+
+  document.querySelectorAll('.proj-card').forEach(card => {
+    if (isTouchDevice) return;
+
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+
+      if (window.gsap) {
+        gsap.to(card, { rotateY: x * 14, rotateX: -y * 10, translateY: -8, duration: 0.35, ease: 'power2.out', transformPerspective: 900, overwrite: true });
+      } else {
+        card.style.transform = `perspective(900px) rotateY(${x*14}deg) rotateX(${-y*10}deg) translateY(-8px)`;
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (window.gsap) {
+        gsap.to(card, { rotateY: 0, rotateX: 0, translateY: 0, duration: 0.75, ease: 'elastic.out(1,0.5)', overwrite: true });
+      } else {
+        card.style.transform = '';
+      }
+    });
+  });
+
+  // ── 8. NAV ACTIVE HIGHLIGHT ────────────────────────────────
+  const navLinks = document.querySelectorAll('.nav-links a, .nav-drawer a');
+  const sections = ['about','experience','skills','projects','contact'].map(id => document.getElementById(id)).filter(Boolean);
+
+  function updateActive() {
+    let cur = 0;
+    sections.forEach((s, i) => { if (window.scrollY >= s.offsetTop - 130) cur = i; });
+    const activeId = sections[cur]?.id;
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.dataset.sec === activeId);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // ── 9. HAMBURGER MENU ──────────────────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('nav-drawer');
+
+  hamburger.addEventListener('click', () => {
+    const open = hamburger.classList.toggle('open');
+    drawer.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+    drawer.setAttribute('aria-hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    drawer.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }));
+
+  // ── 10. COPY EMAIL ─────────────────────────────────────────
+  document.getElementById('copy-email-btn').addEventListener('click', function() {
+    navigator.clipboard.writeText('davidvrdc01@gmail.com').then(() => {
+      const label = document.getElementById('copy-label');
+      this.classList.add('copied');
+      label.textContent = 'Copied!';
+      setTimeout(() => {
+        this.classList.remove('copied');
+        label.textContent = 'Copy Email Address';
+      }, 2200);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
