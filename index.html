@@ -11,7 +11,8 @@
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#080808" />
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f8ef7'/%3E%3Cstop offset='100%25' stop-color='%2390c2ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='%23080808'/%3E%3Cpath d='M6 7 L16 25 L26 7 L21.5 7 L16 17.5 L10.5 7 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="v-logo.png" />
+  <link rel="apple-touch-icon" href="v-logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -183,6 +184,18 @@
       text-align: center;
       padding: 80px 2rem 60px;
       position: relative; z-index: 1;
+    }
+    /* V-Logo watermark at the top of the hero. mix-blend-mode: screen makes
+       the dark logo background disappear against the dark page → transparent look. */
+    .hero-logo-bg {
+      position: absolute;
+      top: clamp(40px, 8vh, 120px);
+      left: 50%; transform: translateX(-50%);
+      width: min(560px, 85vw); height: auto;
+      z-index: -1;
+      opacity: .20;
+      mix-blend-mode: screen;
+      pointer-events: none; -webkit-user-select: none; user-select: none;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: .55rem;
@@ -539,6 +552,14 @@
       .nav-hamburger { display: flex; }
       .nav-drawer { display: flex; }
 
+      /* Solid nav on mobile: prevents content bleeding above/through the
+         translucent bar (iOS Safari backdrop-filter artifact) + smoother scroll */
+      nav {
+        background: #080808;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+
       .hero { padding: 80px 2rem 5rem; }
       .hero h1 { font-size: clamp(2.8rem, 8vw, 4.5rem); }
       .hero-badge {
@@ -675,6 +696,7 @@
 
 <!-- ── HERO ────────────────────────────────────────────────── -->
 <section class="hero" id="hero">
+  <img class="hero-logo-bg" src="v-logo.png" alt="" aria-hidden="true" />
   <div class="hero-badge">
     <div class="badge-dot"></div>
     <span id="badge-text"></span><span id="badge-text-cursor"></span>
@@ -683,7 +705,7 @@
   <h1 id="hero-h1">Hi, I'm David.</h1>
 
   <p class="hero-sub">
-    Production Engineer with a passion for <strong>AI and building things.</strong><br>
+    Operations Engineer with a passion for <strong>AI and building things.</strong><br>
     My goal: <strong>Driving Operations towards AI-powered and intelligent systems.</strong>
   </p>
 
@@ -729,14 +751,19 @@
     </div>
     <div class="about-grid">
       <div class="about-text">
-        <p class="fade">Artificial intelligence is changing how humanity creates value. Yet while much of the conversation focuses on digital products, content generation, and software, some of the most important opportunities lie in the physical world — in factories, supply chains, production systems, and operations.</p>
-        <p class="fade">Over decades, companies have built extraordinary expertise in planning, manufacturing, and execution. These systems are complex, constraint-driven, and deeply human. AI doesn't replace that — it amplifies it.</p>
-        <p class="callout fade">I believe AI has the potential to make operational knowledge more accessible, decisions more informed, and execution more effective.</p>
-        <p class="fade">Building meaningful AI for industrial domains requires more than technical expertise. It requires process understanding, operational thinking, and a deep appreciation for how real-world systems work — where physical constraints, accumulated knowledge, and human judgment all matter.</p>
-        <p class="callout fade">My mission is to help build the bridge between operations and AI.</p>
-        <p class="fade">Europe has built its prosperity on engineering and operational excellence. I believe the next leap in competitiveness will come from combining these strengths with artificial intelligence — systems that perceive, reason, and act in the physical world.</p>
+        <p class="fade">Artificial intelligence is transforming how humanity creates value.</p>
+        <p class="fade">Most of today's conversation focuses on digital products, software, and content generation. Yet some of the biggest opportunities may lie elsewhere: in factories, supply chains, production systems, and operations.</p>
+        <p class="fade">These environments power the real economy. They have been built and improved over decades through engineering expertise, operational excellence, and countless human decisions. Behind every product, every shipment, and every production line lies a complex network of processes, constraints, and experience.</p>
+        <p class="callout fade">This complexity is exactly what makes the opportunity so exciting.</p>
+        <p class="fade">AI is often discussed as a replacement for human work. In operations, I see it differently. Its greatest potential lies in supporting people and helping them work more effectively. AI can make knowledge more accessible, improve decision making, and help organizations execute better.</p>
+        <p class="fade">At the same time, building useful AI for industrial environments requires more than technical expertise. It requires an understanding of processes, operations, and the realities of how businesses work. Real world constraints matter. Human judgment matters. Experience matters.</p>
+        <p class="fade">This is where I believe AI can create some of its greatest impact.</p>
+        <p class="callout fade">My mission is to help build the bridge between operations and artificial intelligence.</p>
+        <p class="fade">I want to bring together operational expertise and modern AI to create solutions that help organizations make better decisions and achieve better outcomes.</p>
+        <p class="fade">Europe has built its prosperity on engineering, manufacturing, and operational excellence. I believe the next leap in competitiveness will come from combining these strengths with artificial intelligence.</p>
         <p class="callout closing fade">Contributing to that future is what drives my work.</p>
-        <p class="fade">That's why I'm currently spending a lot of time exploring AI in Operations — working on projects that genuinely excite me, sharing them here, and staying open to feedback or collaboration. If something resonates, feel free to reach out. 😊</p>
+        <p class="fade">That is why I currently spend much of my time exploring AI in Operations. I work on projects that genuinely excite me, share what I learn, and stay open to conversations, feedback, and collaboration.</p>
+        <p class="fade">If this resonates with you, I would love to connect. 😊</p>
       </div>
       <div class="facts">
         <div class="fact goals-block fade">

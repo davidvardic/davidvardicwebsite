@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>David Vardic · Operations Engineer & AI Builder</title>
+  <meta name="description" content="David Vardic — Operations & Production Engineer at ZF Friedrichshafen AG, building AI tools for industrial operations. Explore my projects, skills, and background." />
+  <meta property="og:title" content="David Vardic · Operations Engineer & AI Builder" />
+  <meta property="og:description" content="24-year-old engineer bridging Operations and AI. Currently at ZF Friedrichshafen AG — shipping AI products for real factory floors." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#080808" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    ::selection { background: #4f8ef7; color: #fff; }
+
+    :root {
+      --bg:      #080808;
+      --surface: #101010;
+      --card:    #121212;
+      --border:  rgba(255,255,255,.07);
+      --border2: rgba(255,255,255,.13);
+      --text:    #f0f0f0;
+      --muted:   rgba(240,240,240,.4);
+      --muted2:  rgba(240,240,240,.65);
+      --accent:  #4f8ef7;
+      --accent2: #7eb3ff;
+      --accent-dim: rgba(79,142,247,.15);
+      --accent-glow: rgba(79,142,247,.3);
+      --max: 1100px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      max-width: 100vw;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── BG GLOW ──────────────────────────────────────────── */
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 50% at 12% 88%, rgba(35,85,210,.24) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 35% at 82% 18%, rgba(30,70,185,.11) 0%, transparent 60%);
+    }
+
+    /* ── HERO DOT GRID ────────────────────────────────────── */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255,255,255,.055) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    /* ── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: fixed; inset: 0 0 auto 0; z-index: 200;
+      height: 64px;
+      display: flex; align-items: center;
+      padding: 0 2.5rem;
+      background: rgba(8,8,8,.92);
+      -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max); width: 100%; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800; font-size: 1.1rem; letter-spacing: -0.03em; color: #fff;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: .1rem; list-style: none; }
+    .nav-links a {
+      display: flex; align-items: center; gap: .45rem;
+      font-size: .78rem; font-weight: 500; color: var(--muted2);
+      padding: .45rem .9rem; border-radius: 8px;
+      transition: color .15s, background .15s;
+      position: relative;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+    .nav-links a.active { color: var(--accent); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: -1px; left: .9rem; right: .9rem;
+      height: 2px; background: var(--accent); border-radius: 1px;
+    }
+    .nav-icon { font-size: .78rem; }
+
+    /* ── HAMBURGER (mobile) ───────────────────────────────── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      padding: .5rem; border-radius: 8px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--muted2); border-radius: 2px;
+      transition: all .25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .nav-drawer {
+      display: none;
+      position: fixed; inset: 64px 0 0 0; z-index: 190;
+      background: rgba(8,8,8,.97); -webkit-backdrop-filter: blur(28px); backdrop-filter: blur(28px);
+      padding: 2rem 2rem;
+      flex-direction: column; gap: .5rem;
+      transform: translateX(100%);
+      transition: transform .25s ease;
+    }
+    .nav-drawer.open { transform: translateX(0); }
+    .nav-drawer a {
+      display: flex; align-items: center; gap: .75rem;
+      font-size: 1.1rem; font-weight: 500; color: var(--muted2);
+      padding: 1rem 1rem; border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: color .15s, background .15s;
+    }
+    .nav-drawer a:hover, .nav-drawer a.active { color: #fff; background: rgba(79,142,247,.08); border-color: rgba(79,142,247,.25); }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px 2rem 60px;
+      position: relative; z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .55rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border2);
+      padding: .55rem 1.5rem; border-radius: 100px;
+      font-size: .88rem; font-weight: 500; color: var(--muted2);
+      margin-bottom: 2rem; letter-spacing: .04em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #badge-text-cursor {
+      display: inline-block; width: .55em; height: .8em;
+      background: var(--accent); margin-left: .1em; vertical-align: middle;
+      animation: blink .65s step-end infinite; border-radius: 1px;
+    }
+
+    /* h1 + sub slide-up fade */
+    @keyframes heroSlideUp {
+      from { opacity: 0; transform: translateY(44px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-h1-static {
+      -webkit-animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+      animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+    }
+    .hero-sub {
+      -webkit-animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+      animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+    }
+    .hero-buttons {
+      -webkit-animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+      animation: heroSlideUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+    }
+    /* iOS / reduced motion fallback — always show content */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-h1-static, .hero-sub, .hero-buttons { animation: none; opacity: 1; transform: none; }
+      .fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .skill-pill { opacity: 1 !important; animation: none !important; }
+      .goals-slide { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 7px var(--accent-glow);
+      animation: pdot 2s ease-in-out infinite; flex-shrink: 0;
+    }
+    @keyframes pdot { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.45);opacity:.55} }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3.8rem, 10vw, 8.5rem);
+      font-weight: 700; line-height: 1.0; letter-spacing: -0.03em;
+      color: #fff; margin-bottom: 1.8rem; min-height: 1.05em;
+    }
+    .h1-cursor {
+      display: inline-block; width: .055em; height: .82em;
+      background: var(--accent); margin-left: .05em; vertical-align: middle;
+      animation: blink .65s step-end infinite; border-radius: 1px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .hero-sub {
+      max-width: 620px; font-size: 1.08rem; font-weight: 300;
+      color: var(--muted2); line-height: 1.78; margin-bottom: 2.75rem;
+    }
+    .hero-sub strong { color: var(--accent2); font-weight: 600; }
+
+    .hero-buttons {
+      display: flex; gap: 1rem; align-items: center;
+      justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .82rem 2rem; border-radius: 10px;
+      font-size: .9rem; font-weight: 600;
+      transition: all .2s; cursor: pointer; border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 22px var(--accent-glow);
+    }
+    .btn-primary:hover { background: #6ba3ff; transform: translateY(-2px) rotateX(4deg); box-shadow: 0 8px 32px var(--accent-glow), 0 2px 0 rgba(255,255,255,.12) inset; }
+    .btn-secondary {
+      background: transparent; color: var(--muted2); border: 1px solid var(--border2);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,.28); color: #fff; transform: translateY(-2px) rotateX(4deg); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+
+    /* ── SCROLLING LOGO TICKER ────────────────────────────── */
+    .logo-ticker {
+      width: 100%; overflow: hidden;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0; margin-bottom: 3.5rem;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    }
+    .ticker-track {
+      display: flex; align-items: center; gap: 0;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: 0 2.5rem; white-space: nowrap;
+      border-right: 1px solid var(--border);
+    }
+    .ticker-item:last-child { border-right: none; }
+    .ticker-logo {
+      height: 28px; width: auto; max-width: 110px;
+      object-fit: contain; filter: brightness(0) invert(1); opacity: .32;
+      transition: opacity .2s;
+    }
+    .ticker-track:hover .ticker-logo { opacity: .6; }
+    .ticker-name { display: none; }
+
+    .scroll-hint {
+      display: flex; flex-direction: column; align-items: center; gap: .7rem;
+      perspective: 400px;
+    }
+    .scroll-hint-label {
+      font-size: .72rem; font-weight: 500; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted2);
+      transform: rotateX(18deg);
+      transform-origin: bottom center;
+    }
+    .scroll-arrow-3d {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(79,142,247,.08);
+      border: 1px solid rgba(79,142,247,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; color: var(--accent);
+      box-shadow: 0 4px 16px rgba(79,142,247,.2), 0 1px 0 rgba(255,255,255,.06) inset;
+      animation: scroll3d 2.4s ease-in-out infinite;
+      transform-style: preserve-3d;
+    }
+    @keyframes scroll3d {
+      0%   { transform: translateY(0)    rotateX(0deg);   opacity: .9; box-shadow: 0 4px 16px rgba(79,142,247,.2); }
+      40%  { transform: translateY(7px)  rotateX(12deg);  opacity: 1;  box-shadow: 0 10px 28px rgba(79,142,247,.35); }
+      100% { transform: translateY(0)    rotateX(0deg);   opacity: .9; box-shadow: 0 4px 16px rgba(79,142,247,.2); }
+    }
+
+    /* ── SECTION SHARED ───────────────────────────────────── */
+    .section { padding: 5.5rem 2.5rem; position: relative; z-index: 1; width: 100%; max-width: 100vw; }
+    #about { padding-bottom: 3.5rem; }
+    .section + .section { border-top: 1px solid var(--border); }
+    .section-inner { max-width: var(--max); margin: 0 auto; }
+
+    /* section heading with icon badge — matches Camilla style */
+    .sec-heading {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2.75rem;
+    }
+    .sec-icon-wrap {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid rgba(79,142,247,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sec-h {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.03em; color: #fff;
+    }
+
+    /* centered section heading variant */
+    .sec-heading-center {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; margin-bottom: 2.75rem; gap: 1rem;
+    }
+    .sec-heading-center .sec-icon-wrap { margin-bottom: .25rem; }
+    .sec-heading-center .sec-h { color: var(--accent); }
+    .sec-sub {
+      font-size: .95rem; font-weight: 300; color: var(--muted2); line-height: 1.75;
+      max-width: 520px; text-align: center;
+    }
+
+    /* ── ABOUT ────────────────────────────────────────────── */
+    .about-grid { display: grid; grid-template-columns: 1fr 280px; gap: 5rem; align-items: start; }
+    .about-grid > * { min-width: 0; }
+    .about-text p {
+      font-size: 1rem; font-weight: 300; color: var(--muted2);
+      line-height: 1.9; margin-bottom: .95rem;
+    }
+    .about-text strong { color: #fff; font-weight: 600; }
+    .about-text em     { color: var(--accent2); font-style: normal; font-weight: 500; }
+
+    /* Standalone callout paragraphs — key mission statements */
+    .about-text .callout {
+      font-size: 1.12rem; font-weight: 400;
+      color: var(--accent2); line-height: 1.7;
+      border-left: 2px solid rgba(79,142,247,.35);
+      padding-left: 1.2rem; margin: 1.35rem 0;
+    }
+    .about-text .closing {
+      font-size: 1.02rem; font-weight: 600;
+      color: var(--accent2); margin-top: 1.35rem; margin-bottom: .5rem;
+    }
+
+    .facts { display: flex; flex-direction: column; }
+    .fact { padding: .9rem 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: .3rem; }
+    .fact:first-child { border-top: 1px solid var(--border); }
+    .fact-label { font-size: .58rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+    .fact-value { font-size: .85rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .fact-value.avail { color: #6ee7b7; }
+
+    /* ── HIGHLIGHTS ───────────────────────────────────────── */
+    .highlight-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .hcard {
+      background: var(--card); padding: 2rem 2rem 2.25rem;
+      transition: background .2s;
+    }
+    .hcard { transform-style: preserve-3d; transform: perspective(800px); }
+    .hcard:hover { background: #161616; transform: perspective(800px) rotateX(-2deg) rotateY(1deg) translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(79,142,247,.15); }
+    .hcard-num { font-size: .6rem; font-weight: 700; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; margin-bottom: .85rem; }
+    .hcard-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: .55rem; letter-spacing: -0.015em; }
+    .hcard-desc { font-size: .83rem; font-weight: 300; color: var(--muted2); line-height: 1.75; }
+
+    /* ── EXPERIENCE — two-column Education | Work ─────────── */
+    .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .exp-grid > * { min-width: 0; }
+
+    .exp-col-title {
+      display: flex; align-items: center; gap: .8rem;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; color: #fff;
+      margin-bottom: 1.5rem;
+    }
+    .exp-col-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid rgba(79,142,247,.22);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Timeline spine */
+    .exp-timeline { position: relative; padding-left: 1.5rem; }
+    .exp-timeline::before {
+      content: ''; position: absolute; left: 0; top: 10px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+
+    .exp-card {
+      position: relative; padding: 0 0 1.25rem 1.5rem;
+    }
+    .exp-card:last-child { padding-bottom: 0; }
+
+    /* Dot on the spine */
+    .exp-card::before {
+      content: ''; position: absolute;
+      left: -4px; top: 8px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .exp-card-inner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid rgba(79,142,247,.35);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      transition: border-color .2s, background .2s;
+    }
+    .exp-card-inner:hover { border-color: var(--border2); border-left-color: rgba(79,142,247,.6); background: #161616; transform: perspective(700px) rotateX(-1.5deg) translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+
+    .exp-card-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: .98rem; font-weight: 700; color: #fff;
+      letter-spacing: -0.015em; margin-bottom: .4rem; line-height: 1.25;
+    }
+    .exp-card-meta {
+      display: flex; align-items: center; gap: .65rem; flex-wrap: wrap;
+    }
+    .exp-card-org {
+      display: flex; align-items: center; gap: .3rem;
+      font-size: .76rem; font-weight: 500; color: var(--muted2);
+    }
+    .exp-card-org svg { opacity: .5; flex-shrink: 0; }
+    .exp-card-date {
+      display: flex; align-items: center; gap: .3rem;
+      font-size: .72rem; font-weight: 600; color: var(--accent);
+    }
+    .exp-card-date svg { opacity: .7; flex-shrink: 0; }
+    .exp-card-desc {
+      font-size: .8rem; font-weight: 300; color: var(--muted2);
+      line-height: 1.65; margin-top: .55rem;
+    }
+
+    /* ── SKILLS — split symbiosis layout ─────────────────── */
+    .skills-split {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: start;
+    }
+
+    .skills-group { display: flex; flex-direction: column; gap: 1rem; }
+
+    .skills-group-label {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      margin-bottom: .25rem;
+    }
+    .sgl-ai  { color: var(--accent); }
+    .sgl-ops { color: #6ee7b7; }
+
+    .skills-group-label-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; flex-shrink: 0;
+    }
+    .sgl-ai  .skills-group-label-icon { background: rgba(79,142,247,.12);  border: 1px solid rgba(79,142,247,.25); }
+    .sgl-ops .skills-group-label-icon { background: rgba(110,231,183,.08); border: 1px solid rgba(110,231,183,.2); }
+
+    .skills-pills {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+    }
+    .sg-ai  .skills-pills { justify-content: flex-end; }
+    .sg-ops .skills-pills { justify-content: flex-start; }
+
+    @keyframes pillPop {
+      from { opacity: 0; transform: translateY(12px) scale(.88); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+    .skill-pill {
+      display: inline-flex; align-items: center;
+      padding: .5rem 1.1rem; border-radius: 100px;
+      font-size: .82rem; font-weight: 500;
+      cursor: default; transition: all .18s; white-space: nowrap;
+      opacity: 0;
+    }
+    .skill-pill.pill-visible {
+      animation: pillPop .45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .sp-ai {
+      background: rgba(79,142,247,.1);
+      border: 1px solid rgba(79,142,247,.25);
+      color: var(--accent2);
+    }
+    .sp-ai:hover { background: rgba(79,142,247,.2); border-color: rgba(79,142,247,.5); transform: translateY(-2px); }
+    .sp-ops {
+      background: rgba(110,231,183,.06);
+      border: 1px solid rgba(110,231,183,.18);
+      color: #6ee7b7;
+    }
+    .sp-ops:hover { background: rgba(110,231,183,.14); border-color: rgba(110,231,183,.4); transform: translateY(-2px); }
+
+    /* centre bridge */
+    .skills-bridge {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      padding: 3.5rem 2rem 0;
+      gap: .5rem;
+    }
+    .sb-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.12));
+    }
+    .sb-node {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; color: var(--muted);
+    }
+    .sb-line2 {
+      width: 1px; flex: 1; min-height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.12), transparent);
+    }
+
+    /* legacy classes — unused but kept for safety */
+    .sp-fill, .sp-outline, .sp-dim { display: none; }
+
+    /* ── PROJECTS — 2×2 card grid ────────────────────────── */
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: 1.25rem;
+    }
+    .projects-grid .proj-card[style*="display:none"] { display: none !important; }
+    .proj-card {
+      border-radius: 18px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative; cursor: pointer;
+      transition: transform .28s cubic-bezier(.22,1,.36,1), border-color .28s, box-shadow .28s;
+      aspect-ratio: 16/9;
+      display: flex; flex-direction: column;
+      transform-style: preserve-3d;
+    }
+    .proj-card:hover { border-color: rgba(79,142,247,.4); box-shadow: 0 20px 50px rgba(79,142,247,.15), 0 4px 12px rgba(0,0,0,.5); }
+
+    /* gradient cover */
+    .proj-cover {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .proj-cover svg { width: 100%; height: 100%; }
+
+    /* category badge */
+    .proj-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: rgba(8,8,8,.75); backdrop-filter: blur(10px);
+      border: 1px solid var(--border2);
+      padding: .3rem .8rem; border-radius: 100px;
+      font-size: .65rem; font-weight: 600; color: var(--accent2);
+      letter-spacing: .04em;
+    }
+    .proj-badge-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+    /* status badge top-right */
+    .proj-status {
+      position: absolute; top: 1rem; right: 1rem;
+      font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: .2rem .6rem; border-radius: 100px;
+    }
+    .ps-live  { background: rgba(110,231,183,.12); border: 1px solid rgba(110,231,183,.3); color: #6ee7b7; }
+    .ps-build { background: rgba(79,142,247,.12);  border: 1px solid rgba(79,142,247,.3);  color: var(--accent2); }
+    .ps-plan  { background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--muted); }
+
+    /* text overlay at bottom */
+    .proj-overlay {
+      position: absolute; inset: 0; top: auto;
+      background: linear-gradient(to top, rgba(8,8,8,.95) 0%, rgba(8,8,8,.5) 55%, transparent 100%);
+      padding: 1.25rem 1.25rem 1.4rem;
+      display: flex; flex-direction: column; justify-content: flex-end; gap: .4rem;
+    }
+    .proj-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: -0.015em;
+      line-height: 1.25;
+    }
+    .proj-desc { font-size: .75rem; font-weight: 300; color: var(--muted2); line-height: 1.55; }
+    .proj-link {
+      font-size: .68rem; font-weight: 600; color: var(--accent2);
+      display: inline-flex; align-items: center; gap: .25rem; margin-top: .2rem;
+    }
+
+    /* ── COPY EMAIL BUTTON ────────────────────────────────── */
+    .copy-email-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: 1.5rem;
+      background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.25);
+      color: var(--accent2); padding: .65rem 1.4rem; border-radius: 100px;
+      font-size: .82rem; font-weight: 600; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all .2s;
+    }
+    .copy-email-btn:hover { background: rgba(79,142,247,.2); border-color: rgba(79,142,247,.5); transform: translateY(-1px); }
+    .copy-email-btn.copied { background: rgba(110,231,183,.12); border-color: rgba(110,231,183,.35); color: #6ee7b7; }
+
+    /* ── CONTACT ──────────────────────────────────────────── */
+    .contact-center { text-align: center; max-width: 660px; margin: 0 auto; }
+    .contact-center .sec-heading { justify-content: center; }
+    .contact-tagline {
+      font-size: 1rem; font-weight: 300; color: var(--muted2); line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    .contact-icon-cards {
+      display: flex; gap: 1.25rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap;
+    }
+    .cic {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: .75rem; padding: 2rem 1.75rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; width: 160px;
+      transition: border-color .2s, background .2s, transform .2s;
+      cursor: pointer;
+    }
+    .cic:hover { border-color: rgba(79,142,247,.4); background: rgba(79,142,247,.05); transform: translateY(-3px); }
+    .cic-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid rgba(79,142,247,.25);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cic-icon svg { color: var(--accent); }
+    .cic-label { font-size: .85rem; font-weight: 600; color: var(--text); }
+
+    .contact-meta {
+      display: flex; align-items: center; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
+    }
+    .contact-meta-item {
+      display: flex; align-items: center; gap: .65rem;
+      font-size: .85rem; color: var(--muted2);
+    }
+    .contact-meta-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent-dim); border: 1px solid rgba(79,142,247,.2);
+      display: flex; align-items: center; justify-content: center; font-size: .8rem;
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem; position: relative; z-index: 1;
+    }
+    .footer-inner {
+      max-width: var(--max); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: .95rem; }
+    .footer-logo span { color: var(--accent); }
+    footer p { font-size: .72rem; color: var(--muted); }
+
+    /* ── FADE ─────────────────────────────────────────────── */
+    .fade { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
+
+
+    /* ── GOALS SLIDE-UP ───────────────────────────────────── */
+    .goals-slide { opacity: 0; transform: translateY(40px); transition: opacity 1.1s cubic-bezier(0.22,1,0.36,1) 1.4s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 1.4s; }
+    .goals-slide.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+
+    /* Tablet (≤900px) */
+    @media (max-width: 900px) {
+      .section { padding: 4rem 1.5rem; }
+      #about { padding-bottom: 2.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .exp-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .highlight-grid { grid-template-columns: 1fr; }
+      .skills-split { grid-template-columns: 1fr; gap: 1.5rem; }
+      .skills-bridge { display: none; }
+      .sg-ai .skills-pills { justify-content: flex-start; }
+      .skills-group-label { margin-bottom: .5rem; }
+      .sec-h { font-size: clamp(1.8rem, 5vw, 2.5rem); }
+    }
+
+    /* Mobile (≤600px) */
+    @media (max-width: 600px) {
+      :root { --max: 100%; }
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-drawer { display: flex; }
+
+      .section { padding: 3.5rem 1.25rem; }
+      #about { padding-bottom: 2rem; }
+
+      .hero { padding: 80px 1.25rem 50px; }
+      .hero h1 { font-size: clamp(2.6rem, 12vw, 4rem); }
+      .hero-sub { font-size: .95rem; }
+      .hero-buttons { flex-direction: column; align-items: stretch; gap: .75rem; }
+      .btn { justify-content: center; }
+      .hero-badge { font-size: .72rem; padding: .45rem 1rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .about-text p { font-size: .95rem; }
+      .about-text .callout { font-size: 1rem; }
+      .facts { border-top: 1px solid var(--border); padding-top: 1.5rem; }
+
+      .exp-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .exp-col-title { font-size: 1.3rem; margin-bottom: 1rem; }
+      .exp-timeline { padding-left: 1.25rem; }
+      .exp-card-inner { padding: .85rem 1rem; }
+      .exp-card-title { font-size: .92rem; }
+      .exp-card-dot { display: none; }
+
+      .skills-split { grid-template-columns: 1fr; }
+      .skill-pill { font-size: .76rem; padding: .4rem .9rem; }
+      .sec-sub { font-size: .85rem; }
+
+      .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .proj-card { aspect-ratio: 4/3; }
+
+      .cic { width: 110px; padding: 1.25rem .75rem; }
+      .cic-label { font-size: .78rem; }
+      .contact-tagline { font-size: .9rem; }
+
+      .footer-inner { flex-direction: column; gap: .5rem; text-align: center; }
+    }
+
+    /* Small phones (≤380px) */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: clamp(2.2rem, 11vw, 3rem); }
+      .cic { width: 95px; padding: 1rem .5rem; }
+      .skill-pill { font-size: .7rem; padding: .35rem .75rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- ── NAV ────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">David Vardic<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about"      data-sec="about">
+        <svg class="nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>About Me</span></a></li>
+      <li><a href="#experience" data-sec="experience">
+        <svg class="nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></svg>
+        <span>Experience</span></a></li>
+      <li><a href="#skills"     data-sec="skills">
+        <svg class="nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <span>Skills</span></a></li>
+      <li><a href="#projects"   data-sec="projects">
+        <svg class="nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><path d="M12 6a6 6 0 0 1 6 6c0 3-2 5-2 5H8s-2-2-2-5a6 6 0 0 1 6-6z"/><line x1="8.5" y1="17" x2="15.5" y2="17"/><line x1="9" y1="20" x2="15" y2="20"/></svg>
+        <span>Projects</span></a></li>
+      <li><a href="#contact"    data-sec="contact">
+        <svg class="nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Contact</span></a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <a href="#about"      data-sec="about">About Me</a>
+  <a href="#experience" data-sec="experience">Experience</a>
+  <a href="#skills"     data-sec="skills">Skills</a>
+  <a href="#projects"   data-sec="projects">Projects</a>
+  <a href="#contact"    data-sec="contact">Contact</a>
+</div>
+
+<!-- ── HERO ───────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    <span id="badge-text"></span><span id="badge-text-cursor"></span>
+  </div>
+
+  <h1 class="hero-h1-static">Hi, I'm David.</h1>
+
+  <p class="hero-sub">
+    Production Engineer with an Obsession for <strong>AI and Building Things.</strong><br>
+    My Goal: <strong>Moving Operations Towards AI and Smart Systems.</strong>
+  </p>
+
+  <div class="hero-buttons">
+    <a href="#projects" class="btn btn-primary">View My Work</a>
+    <a href="#contact"  class="btn btn-secondary">Let's Connect ↗</a>
+  </div>
+
+  <div class="logo-ticker">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+  <script>
+  // Build ticker with real logos — duplicated for seamless loop
+  (function() {
+    var items = [
+      { src: 'https://upload.wikimedia.org/wikipedia/de/thumb/3/35/DHBW_logo.svg/200px-DHBW_logo.svg.png',            name: 'DHBW Friedrichshafen' },
+      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/RWU_Logo_cmyk.svg/320px-RWU_Logo_cmyk.svg.png', name: 'RWU Ravensburg-Weingarten' },
+      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/ZF_logo.svg/200px-ZF_logo.svg.png',            name: 'ZF Friedrichshafen AG' },
+    ];
+    var track = document.getElementById('ticker-track');
+    // render twice for seamless loop
+    [0,1].forEach(function() {
+      items.forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'ticker-item';
+        if (item.src) {
+          var img = document.createElement('img');
+          img.className = 'ticker-logo';
+          img.src = item.src;
+          img.alt = item.name;
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.onerror = function() { this.style.display = 'none'; };
+          div.appendChild(img);
+        }
+        var span = document.createElement('span');
+        span.className = 'ticker-name';
+        span.textContent = item.name;
+        div.appendChild(span);
+        track.appendChild(div);
+      });
+    });
+  })();
+  </script>
+
+  <div class="scroll-hint">
+    <span class="scroll-hint-label">Scroll to Explore</span>
+    <div class="scroll-arrow-3d">↓</div>
+  </div>
+</section>
+
+<!-- ── MOTIVATION ─────────────────────────────────────────── -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <h2 class="sec-h" id="mission-heading"></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Artificial intelligence is changing how humanity creates value. Yet while much of the conversation focuses on digital products, content generation, and software, some of the most important opportunities lie in the physical world — in factories, supply chains, production systems, and operations.</p>
+        <p>Over decades, companies have built extraordinary expertise in planning, manufacturing, and execution. These systems are complex, constraint-driven, and deeply human. AI doesn't replace that — it amplifies it.</p>
+        <p class="callout">I believe AI has the potential to make operational knowledge more accessible, decisions more informed, and execution more effective.</p>
+        <p>Building meaningful AI for industrial domains requires more than technical expertise. It requires process understanding, operational thinking, and a deep appreciation for how real-world systems work — where physical constraints, accumulated knowledge, and human judgment all matter.</p>
+        <p class="callout">My mission is to help build the bridge between operations and AI.</p>
+        <p>Europe has built its prosperity on engineering and operational excellence. I believe the next leap in competitiveness will come from combining these strengths with artificial intelligence. Agentic AI, Operational AI, and Physical AI — systems that perceive, reason, and act in the physical world — have the potential to make industrial systems more adaptive, productive, and resilient.</p>
+        <p class="callout closing">Contributing to that future is what drives my work.</p>
+        <p>That's why I'm currently spending a lot of time exploring AI in Operations — working on projects that genuinely excite me, sharing them here, and staying open to feedback or collaboration. If something resonates, feel free to reach out. 😊</p>
+      </div>
+      <div class="facts" style="justify-content:center; border-top:none;">
+        <div class="fact goals-slide" style="border:none; padding:0; gap:.75rem;">
+          <span style="font-size:.72rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(110,231,183,.6); font-family:'Plus Jakarta Sans',sans-serif;">My Goals for 2026</span>
+          <span style="font-size:1.65rem; font-weight:800; color:#6ee7b7; letter-spacing:-.02em; font-family:'Bricolage Grotesque',sans-serif; line-height:1.2;">🏁 Ship 3 AI Products</span>
+          <span style="font-size:1.35rem; font-weight:700; color:#6ee7b7; letter-spacing:-.01em; font-family:'Bricolage Grotesque',sans-serif;">✦ Open to Collaborations</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ──────────────────────────────────────────── -->
+<section class="section" id="experience">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></svg></div>
+      <h2 class="sec-h" id="experience-heading"></h2>
+    </div>
+    <div class="exp-grid">
+
+      <!-- Education column -->
+      <div>
+        <div class="exp-col-title fade">
+          <div class="exp-col-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          Education
+        </div>
+        <div class="exp-timeline">
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">M.Eng. Technology Management</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  RWU Ravensburg-Weingarten
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Oct 2024 – Feb 2026
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Specialization: Business Optimization</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">B.Eng. Mechanical Engineering</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  DHBW Friedrichshafen
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Oct 2021 – Sep 2024
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Specialization: Production & Management</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Team Lead — Zukunftsfabrik Bodensee Initiative</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work column -->
+      <div>
+        <div class="exp-col-title fade">
+          <div class="exp-col-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></svg>
+          </div>
+          Work
+        </div>
+        <div class="exp-timeline">
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Production Engineer</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  ZF Friedrichshafen AG
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Mar 2026 – Present
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Planning and coordinating production processes and projects</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Driving digitalization initiatives on the shop floor</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Identifying where AI and smart systems can deliver measurable improvements</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Master's Candidate — Operations Launch Management & Strategy</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  ZF Friedrichshafen AG
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Sep 2025 – Feb 2026
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Thesis: <em style="font-style:normal; color:var(--text);">"Strategic Development of Performance Analysis for Operations"</em></span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Corporate Strategy & Launch Management division</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Developing performance measurement frameworks across ZF's global production network</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Working Student — Project Management</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  EBZ Sys Tec.
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Oct 2024 – Feb 2025
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Logistics planning for a plant integration project at Mercedes-Benz</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span>Coordinating production timelines and material flows</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="exp-card fade">
+            <div class="exp-card-inner">
+              <div class="exp-card-title">Cooperative Study — 5 Departments</div>
+              <div class="exp-card-meta">
+                <span class="exp-card-org">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  ZF Friedrichshafen AG
+                </span>
+                <span class="exp-card-date">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Oct 2021 – Oct 2024
+                </span>
+              </div>
+              <div class="exp-card-desc" style="margin-top:.75rem;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:.45rem;">
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span><strong style="color:var(--text); font-weight:500;">Systems Engineering</strong> — ODD analysis for autonomous vehicles</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span><strong style="color:var(--text); font-weight:500;">Industrial Planning</strong> — Design &amp; investment analysis of a coating system</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span><strong style="color:var(--text); font-weight:500;">E-Motor Systems Development</strong> — Vibration measurement process development for servo drives</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span><strong style="color:var(--text); font-weight:500;">Semester Abroad — Solihull, UK</strong> — Digital Twin validation of servo drives via Hardware-in-the-Loop testing</span></li>
+                  <li style="display:flex; align-items:baseline; gap:.6rem;"><span style="color:var(--accent); flex-shrink:0; font-size:.7rem;">▸</span><span><strong style="color:var(--text); font-weight:500;">Manufacturing Engineering</strong> — Bachelor's Thesis: Optimization of Production Processes for Ring Gears</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ──────────────────────────────────────────────── -->
+<section class="section" id="skills">
+  <div class="section-inner">
+    <div class="sec-heading-center fade">
+      <div class="sec-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <h2 class="sec-h">Technical Expertise</h2>
+      <p class="sec-sub">The tools, methods, and systems I work with — spanning AI engineering and industrial operations.</p>
+    </div>
+    <div class="skills-split">
+
+      <!-- AI side — right-aligned pills -->
+      <div class="skills-group sg-ai fade">
+        <div class="skills-group-label sgl-ai">
+          <div class="skills-group-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          AI & Engineering
+        </div>
+        <div class="skills-pills">
+          <span class="skill-pill sp-ai">Agentic AI</span>
+          <span class="skill-pill sp-ai">Machine Learning</span>
+          <span class="skill-pill sp-ai">Python</span>
+          <span class="skill-pill sp-ai">RAG</span>
+          <span class="skill-pill sp-ai">Statistics</span>
+          <span class="skill-pill sp-ai">Mathematics</span>
+          <span class="skill-pill sp-ai">REST API</span>
+          <span class="skill-pill sp-ai">Process Automation</span>
+          <span class="skill-pill sp-ai">Claude Code</span>
+          <span class="skill-pill sp-ai">Claude Cowork</span>
+          <span class="skill-pill sp-ai">n8n</span>
+          <span class="skill-pill sp-ai">Microsoft Automate</span>
+        </div>
+      </div>
+
+      <!-- Bridge -->
+      <div class="skills-bridge">
+        <div class="sb-line"></div>
+        <div class="sb-node">⊕</div>
+        <div class="sb-line2"></div>
+      </div>
+
+      <!-- Operations side — left-aligned pills -->
+      <div class="skills-group sg-ops fade">
+        <div class="skills-group-label sgl-ops">
+          <div class="skills-group-label-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/></svg></div>
+          Operations & Production
+        </div>
+        <div class="skills-pills">
+          <span class="skill-pill sp-ops">Lean Management</span>
+          <span class="skill-pill sp-ops">MRP / MRP II</span>
+          <span class="skill-pill sp-ops">TPM</span>
+          <span class="skill-pill sp-ops">Operations Performance Analysis</span>
+          <span class="skill-pill sp-ops">Launch Management</span>
+          <span class="skill-pill sp-ops">Production Planning</span>
+          <span class="skill-pill sp-ops">Design of Experiments (DoE)</span>
+          <span class="skill-pill sp-ops">Value Stream Planning</span>
+          <span class="skill-pill sp-ops">SAP</span>
+<span class="skill-pill sp-ops">Industrie 4.0</span>
+          <span class="skill-pill sp-ops">Supply Chain Management</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ────────────────────────────────────────────── -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <div class="sec-heading fade">
+      <div class="sec-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><path d="M12 6a6 6 0 0 1 6 6c0 3-2 5-2 5H8s-2-2-2-5a6 6 0 0 1 6-6z"/><line x1="8.5" y1="17" x2="15.5" y2="17"/><line x1="9" y1="20" x2="15" y2="20"/></svg></div>
+      <h2 class="sec-h" id="projects-heading"></h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Card 1: MRP System -->
+      <div class="proj-card fade">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#060e24"/>
+                <stop offset="100%" stop-color="#0a1a3e"/>
+              </linearGradient>
+              <linearGradient id="nodeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#2563eb"/>
+                <stop offset="100%" stop-color="#1d4ed8"/>
+              </linearGradient>
+              <filter id="glow1"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect width="640" height="360" fill="url(#bg1)"/>
+            <!-- grid dots -->
+            <pattern id="dot1" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="rgba(79,142,247,.12)"/>
+            </pattern>
+            <rect width="640" height="360" fill="url(#dot1)"/>
+            <!-- BOM Tree: Root -->
+            <rect x="272" y="28" width="96" height="36" rx="8" fill="url(#nodeGrad1)" opacity=".95" filter="url(#glow1)"/>
+            <text x="320" y="51" text-anchor="middle" font-family="monospace" font-size="10" fill="#fff" font-weight="600">Finished Good</text>
+            <!-- Level 1 connectors -->
+            <line x1="320" y1="64" x2="320" y2="76" stroke="#3b82f6" stroke-width="1.5" opacity=".6"/>
+            <line x1="320" y1="76" x2="176" y2="76" stroke="#3b82f6" stroke-width="1.5" opacity=".6"/>
+            <line x1="320" y1="76" x2="464" y2="76" stroke="#3b82f6" stroke-width="1.5" opacity=".6"/>
+            <line x1="176" y1="76" x2="176" y2="90" stroke="#3b82f6" stroke-width="1.5" opacity=".6"/>
+            <line x1="464" y1="76" x2="464" y2="90" stroke="#3b82f6" stroke-width="1.5" opacity=".6"/>
+            <!-- Level 1 nodes -->
+            <rect x="128" y="90" width="96" height="32" rx="7" fill="rgba(37,99,235,.45)" stroke="#3b82f6" stroke-width="1" stroke-opacity=".5"/>
+            <text x="176" y="111" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#93c5fd">Sub-Assembly A</text>
+            <rect x="416" y="90" width="96" height="32" rx="7" fill="rgba(37,99,235,.45)" stroke="#3b82f6" stroke-width="1" stroke-opacity=".5"/>
+            <text x="464" y="111" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#93c5fd">Sub-Assembly B</text>
+            <!-- Level 2 connectors left -->
+            <line x1="176" y1="122" x2="176" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="176" y1="134" x2="112" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="176" y1="134" x2="240" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="112" y1="134" x2="112" y2="148" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="240" y1="134" x2="240" y2="148" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <!-- Level 2 connectors right -->
+            <line x1="464" y1="122" x2="464" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="464" y1="134" x2="400" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="464" y1="134" x2="528" y2="134" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="400" y1="134" x2="400" y2="148" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <line x1="528" y1="134" x2="528" y2="148" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+            <!-- Level 2 nodes -->
+            <rect x="70" y="148" width="84" height="28" rx="6" fill="rgba(30,58,138,.6)" stroke="#1d4ed8" stroke-width="1" stroke-opacity=".4"/>
+            <text x="112" y="167" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#60a5fa">Raw Mat. 1</text>
+            <rect x="198" y="148" width="84" height="28" rx="6" fill="rgba(30,58,138,.6)" stroke="#1d4ed8" stroke-width="1" stroke-opacity=".4"/>
+            <text x="240" y="167" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#60a5fa">Component X</text>
+            <rect x="358" y="148" width="84" height="28" rx="6" fill="rgba(30,58,138,.6)" stroke="#1d4ed8" stroke-width="1" stroke-opacity=".4"/>
+            <text x="400" y="167" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#60a5fa">Raw Mat. 2</text>
+            <rect x="486" y="148" width="84" height="28" rx="6" fill="rgba(30,58,138,.6)" stroke="#1d4ed8" stroke-width="1" stroke-opacity=".4"/>
+            <text x="528" y="167" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#60a5fa">Component Y</text>
+            <!-- Data panel bottom -->
+            <rect x="40" y="210" width="168" height="120" rx="10" fill="rgba(15,30,70,.8)" stroke="rgba(59,130,246,.2)" stroke-width="1"/>
+            <text x="56" y="232" font-family="monospace" font-size="8" fill="#3b82f6" font-weight="700" letter-spacing="1">MRP CALCULATION</text>
+            <text x="56" y="250" font-family="monospace" font-size="8" fill="#60a5fa">Gross Req.  →  450 units</text>
+            <text x="56" y="265" font-family="monospace" font-size="8" fill="#60a5fa">On Hand     →   80 units</text>
+            <text x="56" y="280" font-family="monospace" font-size="8" fill="#60a5fa">Net Req.    →  370 units</text>
+            <text x="56" y="295" font-family="monospace" font-size="8" fill="#93c5fd">Order Qty   →  400 units</text>
+            <rect x="56" y="305" width="136" height="2" rx="1" fill="rgba(59,130,246,.15)"/>
+            <text x="56" y="320" font-family="monospace" font-size="7.5" fill="rgba(147,197,253,.5)">Lead Time: 5 days</text>
+            <!-- AI badge panel -->
+            <rect x="432" y="210" width="172" height="120" rx="10" fill="rgba(15,30,70,.8)" stroke="rgba(59,130,246,.2)" stroke-width="1"/>
+            <text x="448" y="232" font-family="monospace" font-size="8" fill="#3b82f6" font-weight="700" letter-spacing="1">AI RISK DETECTION</text>
+            <circle cx="456" cy="253" r="3" fill="#22c55e"/>
+            <text x="466" y="257" font-family="monospace" font-size="8" fill="#60a5fa">Supply chain stable</text>
+            <circle cx="456" cy="272" r="3" fill="#f59e0b"/>
+            <text x="466" y="276" font-family="monospace" font-size="8" fill="#60a5fa">Lead time +2d risk</text>
+            <circle cx="456" cy="291" r="3" fill="#ef4444"/>
+            <text x="466" y="295" font-family="monospace" font-size="8" fill="#60a5fa">Supplier B shortage</text>
+            <text x="448" y="318" font-family="monospace" font-size="7.5" fill="rgba(147,197,253,.5)">Confidence: 91%</text>
+            <!-- Horizontal flow arrow -->
+            <line x1="224" y1="270" x2="416" y2="270" stroke="#1d4ed8" stroke-width="1" stroke-dasharray="4 3" opacity=".3"/>
+          </svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>MRP · AI</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">AI-Based MRP / MRP II System</div>
+          <div class="proj-desc">BOM explosion, net requirements, order generation & real-time supply risk detection powered by AI.</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Line Balancing -->
+      <div class="proj-card fade">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#041410"/>
+                <stop offset="100%" stop-color="#062018"/>
+              </linearGradient>
+              <linearGradient id="bar2a" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="100%" stop-color="#34d399"/>
+              </linearGradient>
+              <linearGradient id="bar2b" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#047857"/>
+                <stop offset="100%" stop-color="#6ee7b7"/>
+              </linearGradient>
+              <filter id="glow2"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect width="640" height="360" fill="url(#bg2)"/>
+            <pattern id="dot2" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="rgba(110,231,183,.1)"/>
+            </pattern>
+            <rect width="640" height="360" fill="url(#dot2)"/>
+            <!-- Takt time line -->
+            <line x1="50" y1="165" x2="590" y2="165" stroke="#34d399" stroke-width="1.5" stroke-dasharray="6 4" opacity=".5" filter="url(#glow2)"/>
+            <text x="56" y="160" font-family="monospace" font-size="8" fill="#34d399" opacity=".7">TAKT TIME</text>
+            <!-- Station bars -->
+            <!-- St1: 78% -->
+            <rect x="72" y="93" width="54" height="72" rx="5" fill="url(#bar2a)" opacity=".85"/>
+            <rect x="72" y="88" width="54" height="10" rx="3" fill="#34d399" opacity=".3"/>
+            <text x="99" y="82" text-anchor="middle" font-family="monospace" font-size="8" fill="#6ee7b7">78%</text>
+            <!-- St2: 92% -->
+            <rect x="156" y="74" width="54" height="91" rx="5" fill="url(#bar2a)" opacity=".9"/>
+            <text x="183" y="68" text-anchor="middle" font-family="monospace" font-size="8" fill="#6ee7b7">92%</text>
+            <!-- St3: 81% -->
+            <rect x="240" y="89" width="54" height="76" rx="5" fill="url(#bar2b)" opacity=".85"/>
+            <text x="267" y="83" text-anchor="middle" font-family="monospace" font-size="8" fill="#6ee7b7">81%</text>
+            <!-- St4: 95% highlight (bottleneck) -->
+            <rect x="324" y="67" width="54" height="98" rx="5" fill="#f59e0b" opacity=".55"/>
+            <rect x="324" y="62" width="54" height="10" rx="3" fill="#fbbf24" opacity=".4"/>
+            <text x="351" y="56" text-anchor="middle" font-family="monospace" font-size="8" fill="#fcd34d" font-weight="700">95% ⚠</text>
+            <!-- St5: 77% -->
+            <rect x="408" y="95" width="54" height="70" rx="5" fill="url(#bar2b)" opacity=".8"/>
+            <text x="435" y="89" text-anchor="middle" font-family="monospace" font-size="8" fill="#6ee7b7">77%</text>
+            <!-- St6: 84% -->
+            <rect x="492" y="86" width="54" height="79" rx="5" fill="url(#bar2a)" opacity=".85"/>
+            <text x="519" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#6ee7b7">84%</text>
+            <!-- Station floor -->
+            <rect x="50" y="165" width="540" height="3" rx="1.5" fill="rgba(110,231,183,.12)"/>
+            <!-- Station labels -->
+            <text x="99"  y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(110,231,183,.5)">ST-01</text>
+            <text x="183" y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(110,231,183,.5)">ST-02</text>
+            <text x="267" y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(110,231,183,.5)">ST-03</text>
+            <text x="351" y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(251,191,36,.6)">ST-04</text>
+            <text x="435" y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(110,231,183,.5)">ST-05</text>
+            <text x="519" y="186" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(110,231,183,.5)">ST-06</text>
+            <!-- Flow arrows -->
+            <line x1="126" y1="170" x2="152" y2="170" stroke="#059669" stroke-width="1.5" opacity=".5" marker-end="url(#arr2)"/>
+            <line x1="210" y1="170" x2="236" y2="170" stroke="#059669" stroke-width="1.5" opacity=".5"/>
+            <line x1="294" y1="170" x2="320" y2="170" stroke="#059669" stroke-width="1.5" opacity=".5"/>
+            <line x1="378" y1="170" x2="404" y2="170" stroke="#059669" stroke-width="1.5" opacity=".5"/>
+            <line x1="462" y1="170" x2="488" y2="170" stroke="#059669" stroke-width="1.5" opacity=".5"/>
+            <!-- AI optimization result panel -->
+            <rect x="50" y="210" width="540" height="96" rx="10" fill="rgba(4,20,16,.85)" stroke="rgba(16,185,129,.2)" stroke-width="1"/>
+            <text x="70" y="232" font-family="monospace" font-size="8" fill="#10b981" font-weight="700" letter-spacing="1">AI BALANCE RESULT</text>
+            <!-- Before/After bars -->
+            <text x="70" y="252" font-family="monospace" font-size="7.5" fill="rgba(110,231,183,.5)">BEFORE</text>
+            <rect x="120" y="244" width="180" height="10" rx="3" fill="rgba(239,68,68,.2)" stroke="rgba(239,68,68,.3)" stroke-width="1"/>
+            <rect x="120" y="244" width="171" height="10" rx="3" fill="rgba(239,68,68,.35)"/>
+            <text x="306" y="253" font-family="monospace" font-size="7.5" fill="#f87171">Imbalance 38%</text>
+            <text x="70" y="274" font-family="monospace" font-size="7.5" fill="rgba(110,231,183,.5)">AFTER</text>
+            <rect x="120" y="266" width="180" height="10" rx="3" fill="rgba(16,185,129,.15)" stroke="rgba(16,185,129,.3)" stroke-width="1"/>
+            <rect x="120" y="266" width="100" height="10" rx="3" fill="rgba(16,185,129,.4)"/>
+            <text x="306" y="275" font-family="monospace" font-size="7.5" fill="#34d399">Imbalance 7%</text>
+            <text x="70" y="296" font-family="monospace" font-size="7.5" fill="rgba(110,231,183,.4)">Throughput ↑ 18% · Idle time ↓ 31% · Cycle time optimised</text>
+          </svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>Optimization · AI</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">Algorithmic Line Balancing</div>
+          <div class="proj-desc">Algorithmically distributes tasks across workstations to minimise idle time and balance takt across the line.</div>
+        </div>
+      </div>
+
+      <!-- Cards 3 & 4 removed -->
+      <div class="proj-card fade" style="display:none">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0e0a00"/>
+                <stop offset="100%" stop-color="#1c1400"/>
+              </linearGradient>
+              <linearGradient id="capBar" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#d97706"/>
+                <stop offset="100%" stop-color="#fbbf24"/>
+              </linearGradient>
+            </defs>
+            <rect width="640" height="360" fill="url(#bg3)"/>
+            <pattern id="dot3" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="rgba(251,191,36,.08)"/>
+            </pattern>
+            <rect width="640" height="360" fill="url(#dot3)"/>
+            <!-- Factory floor grid -->
+            <text x="50" y="38" font-family="monospace" font-size="8" fill="#d97706" font-weight="700" letter-spacing="1">FACTORY FLOOR — CAPACITY MAP</text>
+            <!-- Grid cells: 6 cols × 4 rows -->
+            <!-- Row 1 -->
+            <rect x="50"  y="50" width="70" height="48" rx="6" fill="rgba(217,119,6,.55)" stroke="rgba(251,191,36,.25)" stroke-width="1"/>
+            <text x="85"  y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-01</text>
+            <text x="85"  y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">88%</text>
+            <rect x="130" y="50" width="70" height="48" rx="6" fill="rgba(217,119,6,.35)" stroke="rgba(251,191,36,.2)" stroke-width="1"/>
+            <text x="165" y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-02</text>
+            <text x="165" y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">64%</text>
+            <rect x="210" y="50" width="70" height="48" rx="6" fill="rgba(239,68,68,.45)" stroke="rgba(252,165,165,.3)" stroke-width="1"/>
+            <text x="245" y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fca5a5">M-03</text>
+            <text x="245" y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fca5a5">97% !</text>
+            <rect x="290" y="50" width="70" height="48" rx="6" fill="rgba(217,119,6,.45)" stroke="rgba(251,191,36,.2)" stroke-width="1"/>
+            <text x="325" y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-04</text>
+            <text x="325" y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">75%</text>
+            <rect x="370" y="50" width="70" height="48" rx="6" fill="rgba(217,119,6,.2)" stroke="rgba(251,191,36,.15)" stroke-width="1"/>
+            <text x="405" y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-05</text>
+            <text x="405" y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">42%</text>
+            <rect x="450" y="50" width="70" height="48" rx="6" fill="rgba(217,119,6,.55)" stroke="rgba(251,191,36,.25)" stroke-width="1"/>
+            <text x="485" y="70" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-06</text>
+            <text x="485" y="84" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">82%</text>
+            <!-- Row 2 -->
+            <rect x="50"  y="106" width="70" height="48" rx="6" fill="rgba(217,119,6,.3)"  stroke="rgba(251,191,36,.18)" stroke-width="1"/>
+            <text x="85"  y="126" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-07</text>
+            <text x="85"  y="140" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">55%</text>
+            <rect x="130" y="106" width="70" height="48" rx="6" fill="rgba(217,119,6,.5)"  stroke="rgba(251,191,36,.22)" stroke-width="1"/>
+            <text x="165" y="126" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-08</text>
+            <text x="165" y="140" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">79%</text>
+            <rect x="210" y="106" width="70" height="48" rx="6" fill="rgba(217,119,6,.55)" stroke="rgba(251,191,36,.25)" stroke-width="1"/>
+            <text x="245" y="126" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-09</text>
+            <text x="245" y="140" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">86%</text>
+            <rect x="290" y="106" width="150" height="48" rx="6" fill="rgba(217,119,6,.1)"  stroke="rgba(251,191,36,.1)"  stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="365" y="126" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(251,191,36,.35)">PLANNED</text>
+            <text x="365" y="140" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(251,191,36,.25)">Greenfield Slot</text>
+            <rect x="450" y="106" width="70" height="48" rx="6" fill="rgba(217,119,6,.4)"  stroke="rgba(251,191,36,.2)"  stroke-width="1"/>
+            <text x="485" y="126" text-anchor="middle" font-family="monospace" font-size="8" fill="#fbbf24">M-10</text>
+            <text x="485" y="140" text-anchor="middle" font-family="monospace" font-size="7" fill="#fde68a">70%</text>
+            <!-- Capacity timeline chart -->
+            <rect x="50" y="175" width="470" height="140" rx="10" fill="rgba(14,10,0,.85)" stroke="rgba(217,119,6,.2)" stroke-width="1"/>
+            <text x="66" y="196" font-family="monospace" font-size="8" fill="#d97706" font-weight="700" letter-spacing="1">CAPACITY PROJECTION — 12 WEEKS</text>
+            <!-- Y-axis labels -->
+            <text x="64" y="218" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)">100%</text>
+            <line x1="94" y1="215" x2="504" y2="215" stroke="rgba(251,191,36,.07)" stroke-width="1"/>
+            <text x="64" y="243" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)"> 75%</text>
+            <line x1="94" y1="240" x2="504" y2="240" stroke="rgba(251,191,36,.07)" stroke-width="1"/>
+            <text x="64" y="268" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)"> 50%</text>
+            <line x1="94" y1="265" x2="504" y2="265" stroke="rgba(251,191,36,.07)" stroke-width="1"/>
+            <!-- Capacity line -->
+            <polyline points="94,248 136,240 178,232 220,242 262,228 304,218 346,210 388,225 430,217 472,208 504,215"
+              fill="none" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round"/>
+            <!-- Area fill -->
+            <polygon points="94,248 136,240 178,232 220,242 262,228 304,218 346,210 388,225 430,217 472,208 504,215 504,290 94,290"
+              fill="rgba(245,158,11,.07)"/>
+            <!-- Threshold line -->
+            <line x1="94" y1="218" x2="504" y2="218" stroke="#ef4444" stroke-width="1" stroke-dasharray="5 3" opacity=".4"/>
+            <text x="507" y="222" font-family="monospace" font-size="7" fill="rgba(239,68,68,.5)">MAX</text>
+            <!-- Week labels -->
+            <text x="94"  y="302" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)">W1</text>
+            <text x="220" y="302" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)">W4</text>
+            <text x="346" y="302" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)">W8</text>
+            <text x="462" y="302" font-family="monospace" font-size="7" fill="rgba(251,191,36,.3)">W12</text>
+          </svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>Automation · n8n</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">Ops Workflow Automator</div>
+          <div class="proj-desc">Describe an ops handoff — get an AI-generated automation plan + importable n8n workflow JSON. Powered by Claude API.</div>
+          <a href="ops-workflow-automator.html" class="proj-link">Try It Live ↗</a>
+        </div>
+      </div>
+
+      <!-- Card 4: SOP Generator (hidden) -->
+      <div class="proj-card fade" style="display:none">
+        <div class="proj-cover">
+          <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#08041a"/>
+                <stop offset="100%" stop-color="#110830"/>
+              </linearGradient>
+              <linearGradient id="nodeG4" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#5b21b6"/>
+              </linearGradient>
+              <filter id="glow4"><feGaussianBlur stdDeviation="4" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect width="640" height="360" fill="url(#bg4)"/>
+            <pattern id="dot4" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="rgba(167,139,250,.1)"/>
+            </pattern>
+            <rect width="640" height="360" fill="url(#dot4)"/>
+            <!-- AI neural glow orb -->
+            <circle cx="490" cy="130" r="70" fill="rgba(109,40,217,.08)" filter="url(#glow4)"/>
+            <circle cx="490" cy="130" r="44" fill="rgba(124,58,237,.12)"/>
+            <circle cx="490" cy="130" r="22" fill="rgba(124,58,237,.25)" filter="url(#glow4)"/>
+            <!-- Neural network lines -->
+            <line x1="490" y1="130" x2="430" y2="90"  stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <line x1="490" y1="130" x2="550" y2="90"  stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <line x1="490" y1="130" x2="430" y2="170" stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <line x1="490" y1="130" x2="550" y2="170" stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <line x1="490" y1="130" x2="490" y2="60"  stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <line x1="490" y1="130" x2="490" y2="200" stroke="rgba(167,139,250,.2)" stroke-width="1"/>
+            <circle cx="430" cy="90"  r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <circle cx="550" cy="90"  r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <circle cx="430" cy="170" r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <circle cx="550" cy="170" r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <circle cx="490" cy="60"  r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <circle cx="490" cy="200" r="6" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
+            <!-- Center AI label -->
+            <text x="490" y="127" text-anchor="middle" font-family="monospace" font-size="7" fill="#c4b5fd" font-weight="700">CLAUDE</text>
+            <text x="490" y="139" text-anchor="middle" font-family="monospace" font-size="7" fill="#c4b5fd">API</text>
+            <!-- SOP Document -->
+            <rect x="50" y="30" width="380" height="290" rx="12" fill="rgba(12,6,30,.9)" stroke="rgba(124,58,237,.25)" stroke-width="1"/>
+            <!-- Doc header -->
+            <rect x="50" y="30" width="380" height="44" rx="12" fill="rgba(124,58,237,.18)"/>
+            <rect x="50" y="62" width="380" height="12" rx="0" fill="rgba(124,58,237,.18)"/>
+            <text x="70" y="58" font-family="monospace" font-size="9" fill="#a78bfa" font-weight="700" letter-spacing=".5">STANDARD OPERATING PROCEDURE</text>
+            <!-- Section 1 -->
+            <rect x="70" y="90" width="8" height="8" rx="2" fill="#7c3aed" opacity=".8"/>
+            <text x="84" y="99" font-family="monospace" font-size="8.5" fill="#c4b5fd" font-weight="600">1. Purpose & Scope</text>
+            <rect x="84" y="108" width="200" height="5" rx="2" fill="rgba(167,139,250,.15)"/>
+            <rect x="84" y="118" width="160" height="5" rx="2" fill="rgba(167,139,250,.1)"/>
+            <!-- Section 2 -->
+            <rect x="70" y="136" width="8" height="8" rx="2" fill="#7c3aed" opacity=".8"/>
+            <text x="84" y="145" font-family="monospace" font-size="8.5" fill="#c4b5fd" font-weight="600">2. Process Steps</text>
+            <rect x="84" y="154" width="220" height="5" rx="2" fill="rgba(167,139,250,.15)"/>
+            <rect x="84" y="164" width="180" height="5" rx="2" fill="rgba(167,139,250,.12)"/>
+            <rect x="84" y="174" width="240" height="5" rx="2" fill="rgba(167,139,250,.1)"/>
+            <!-- Section 3 -->
+            <rect x="70" y="192" width="8" height="8" rx="2" fill="#7c3aed" opacity=".8"/>
+            <text x="84" y="201" font-family="monospace" font-size="8.5" fill="#c4b5fd" font-weight="600">3. Roles & Responsibilities</text>
+            <rect x="84" y="210" width="190" height="5" rx="2" fill="rgba(167,139,250,.15)"/>
+            <rect x="84" y="220" width="150" height="5" rx="2" fill="rgba(167,139,250,.1)"/>
+            <!-- Section 4 -->
+            <rect x="70" y="238" width="8" height="8" rx="2" fill="#7c3aed" opacity=".8"/>
+            <text x="84" y="247" font-family="monospace" font-size="8.5" fill="#c4b5fd" font-weight="600">4. KPIs & Risk Controls</text>
+            <rect x="84" y="256" width="210" height="5" rx="2" fill="rgba(167,139,250,.15)"/>
+            <rect x="84" y="266" width="170" height="5" rx="2" fill="rgba(167,139,250,.1)"/>
+            <!-- Generate arrow -->
+            <line x1="440" y1="130" x2="468" y2="130" stroke="#7c3aed" stroke-width="2" opacity=".6" marker-end="url(#arr4)"/>
+            <text x="444" y="122" font-family="monospace" font-size="7" fill="rgba(167,139,250,.5)">generates</text>
+            <!-- Input prompt box -->
+            <rect x="50" y="338" width="380" height="26" rx="6" fill="rgba(20,10,50,.95)" stroke="rgba(124,58,237,.3)" stroke-width="1"/>
+            <text x="66" y="356" font-family="monospace" font-size="8" fill="rgba(167,139,250,.6)">▸  Describe your process...</text>
+            <rect x="392" y="342" width="32" height="18" rx="4" fill="rgba(124,58,237,.5)"/>
+            <text x="408" y="355" text-anchor="middle" font-family="monospace" font-size="7" fill="#e9d5ff">↵</text>
+          </svg>
+        </div>
+        <div class="proj-badge"><span class="proj-badge-dot"></span>AI · Operations</div>
+        <span class="proj-status ps-build">In Build</span>
+        <div class="proj-overlay">
+          <div class="proj-title">SOP Generator</div>
+          <div class="proj-desc">Describe any process — get a fully structured SOP with steps, owners, risks, and KPIs. Powered by Claude API.</div>
+          <a href="sop-generator.html" class="proj-link">Try It Live ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ─────────────────────────────────────────────── -->
+<section class="section" id="contact">
+  <div class="section-inner">
+    <div class="contact-center">
+      <div class="sec-heading fade" style="justify-content:center;">
+        <div class="sec-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+        <h2 class="sec-h">Connect With Me</h2>
+      </div>
+      <p class="contact-tagline fade">Feel free to reach out — whether you want to discuss ideas around these projects, talk about AI in Operations, explore a collaboration, or just have an interesting conversation.</p>
+
+      <div class="contact-icon-cards">
+        <a href="https://github.com/6spd5rbwbb-alt/OperationsAI" target="_blank" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </div>
+          <span class="cic-label">GitHub</span>
+        </a>
+        <a href="https://linkedin.com/in/davidvardic" target="_blank" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <span class="cic-label">LinkedIn</span>
+        </a>
+        <a href="mailto:davidvrdc01@gmail.com" class="cic fade">
+          <div class="cic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <span class="cic-label">Email</span>
+        </a>
+      </div>
+
+      <div class="contact-meta fade">
+        <div class="contact-meta-item">
+          <div class="contact-meta-icon">📍</div>
+          <span>Baden-Württemberg, Germany</span>
+        </div>
+      </div>
+      <button class="copy-email-btn fade" id="copy-email-btn" onclick="copyEmail()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copy-label">Copy Email Address</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">David Vardic<span>.</span></div>
+    <p>© 2026 David Vardic · All Rights Reserved</p>
+  </div>
+</footer>
+
+<script>
+  // ── BADGE TYPEWRITER ───────────────────────────────────────
+  (function() {
+    const el     = document.getElementById('badge-text');
+    const cursor = document.getElementById('badge-text-cursor');
+    const text   = 'Operations Engineer  –  AI Enthusiast  –  Builder';
+    let i = 0;
+
+    function type() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(type, i === 1 ? 400 : 55 + Math.random() * 25);
+      } else {
+        setTimeout(() => {
+          cursor.style.transition = 'opacity 1s ease';
+          cursor.style.opacity = '0';
+          setTimeout(() => cursor.remove(), 1100);
+        }, 2200);
+      }
+    }
+    setTimeout(type, 600);
+  })();
+
+  // ── SECTION HEADING TYPEWRITER (reusable) ──────────────────
+  function typeHeading(id, text, delay) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let started = false;
+
+    function run() {
+      let i = 0;
+      const cursor = document.createElement('span');
+      cursor.style.cssText = 'display:inline-block;width:.05em;height:.78em;background:var(--accent);margin-left:.06em;vertical-align:middle;border-radius:1px;animation:blink .65s step-end infinite';
+      el.appendChild(cursor);
+      function tick() {
+        el.textContent = text.slice(0, i);
+        el.appendChild(cursor);
+        i++;
+        if (i <= text.length) setTimeout(tick, 85 + Math.random() * 35);
+        else setTimeout(() => {
+          cursor.style.transition = 'opacity 1s ease';
+          cursor.style.opacity = '0';
+          setTimeout(() => cursor.remove(), 1100);
+        }, 1800);
+      }
+      setTimeout(tick, delay || 0);
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !started) {
+        started = true; obs.disconnect(); run();
+      }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+  }
+
+  typeHeading('mission-heading',    'My Mission',        0);
+  typeHeading('experience-heading', 'Experience',        0);
+  typeHeading('projects-heading',   'Featured Projects', 0);
+
+  // ── SCROLL FADE-IN (iOS-safe) ──────────────────────────────
+  function showEl(el) { el.classList.add('visible'); }
+
+  // Stagger delays
+  document.querySelectorAll('#projects .proj-card').forEach((el, i) => {
+    el.style.transitionDelay = (0.35 + i * 0.2) + 's';
+  });
+  document.querySelectorAll('#experience .exp-col-title').forEach((el, i) => {
+    el.style.transitionDelay = (0.25 + i * 0.15) + 's';
+  });
+  document.querySelectorAll('#experience .exp-card').forEach((el, i) => {
+    el.style.transitionDelay = (0.45 + i * 0.22) + 's';
+  });
+
+  var allFade = Array.from(document.querySelectorAll('.fade, .goals-slide'));
+
+  // Try IntersectionObserver
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { showEl(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px 0px 0px' });
+    allFade.forEach(function(el) { io.observe(el); });
+  } else {
+    // Fallback: show everything immediately
+    allFade.forEach(showEl);
+  }
+
+  // ── SAFETY NET: after 1.5s show any still-hidden elements ──
+  // Catches cases where IntersectionObserver doesn't fire on iOS
+  setTimeout(function() {
+    allFade.forEach(function(el) {
+      if (!el.classList.contains('visible')) showEl(el);
+    });
+    document.querySelectorAll('.skill-pill:not(.pill-visible)').forEach(function(el) {
+      el.style.opacity = '1';
+      el.style.animation = 'none';
+    });
+  }, 1500);
+
+  // Also show on first scroll (iOS trigger)
+  var scrollFired = false;
+  window.addEventListener('scroll', function() {
+    if (!scrollFired) {
+      scrollFired = true;
+      allFade.forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 200) showEl(el);
+      });
+    }
+  }, { passive: true });
+
+  // ── SKILLS PILL STAGGER ANIMATION ─────────────────────────
+  (function() {
+    var pillsSection = document.getElementById('skills');
+    var fired = false;
+    function showPills() {
+      if (fired) return; fired = true;
+      document.querySelectorAll('.skill-pill').forEach(function(pill, i) {
+        pill.style.animationDelay = (300 + i * 60) + 'ms';
+        pill.classList.add('pill-visible');
+      });
+    }
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { obs.disconnect(); showPills(); }
+      }, { threshold: 0 });
+      if (pillsSection) obs.observe(pillsSection);
+    } else { showPills(); }
+    // Safety: show pills after 2s regardless
+    setTimeout(showPills, 2000);
+  })();
+
+  // ── ACTIVE NAV HIGHLIGHT ───────────────────────────────────
+  const navAs   = document.querySelectorAll('.nav-links a, .nav-drawer a');
+  const secIds  = ['about','experience','skills','projects','contact'];
+  const secEls  = secIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive() {
+    let cur = 0;
+    secEls.forEach((s, i) => { if (window.scrollY >= s.offsetTop - 130) cur = i; });
+    navAs.forEach(a => a.classList.remove('active'));
+    document.querySelectorAll(`[data-sec="${secIds[cur]}"]`).forEach(a => a.classList.add('active'));
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // ── HAMBURGER MENU ─────────────────────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('nav-drawer');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    navDrawer.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    navDrawer.setAttribute('aria-hidden', !isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close drawer on link click
+  navDrawer.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navDrawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      navDrawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── 3D TILT ON PROJECT CARDS ──────────────────────────────
+  document.querySelectorAll('.proj-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;  // -0.5 … 0.5
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      card.style.transform = `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 8}deg) translateY(-6px)`;
+      card.style.boxShadow = `${-x*18}px ${-y*14}px 40px rgba(79,142,247,.18), 0 4px 12px rgba(0,0,0,.5)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.boxShadow = '';
+    });
+  });
+
+  // ── COPY EMAIL ─────────────────────────────────────────────
+  function copyEmail() {
+    navigator.clipboard.writeText('davidvrdc01@gmail.com').then(() => {
+      const btn   = document.getElementById('copy-email-btn');
+      const label = document.getElementById('copy-label');
+      btn.classList.add('copied');
+      label.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        label.textContent = 'Copy Email Address';
+      }, 2200);
+    });
+  }
+</script>
+</body>
+</html>
