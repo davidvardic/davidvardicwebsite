@@ -38,12 +38,12 @@
       --accent:     #4f8ef7;
       --accent2:    #7eb3ff;
       --accent-dim: rgba(79,142,247,.15);
-      --accent-glow:rgba(79,142,247,.3);
+      --accent-glow:rgba(79,142,247,.18);
       --teal:       #6ee7b7;
       --teal-dim:   rgba(110,231,183,.08);
-      --holo-1:     rgba(79,142,247,.7);
-      --holo-2:     rgba(110,231,183,.5);
-      --holo-3:     rgba(147,112,219,.4);
+      --holo-1:     rgba(79,142,247,.45);
+      --holo-2:     rgba(110,231,183,.28);
+      --holo-3:     rgba(79,142,247,.16);
       --max:        1100px;
       --radius-card:18px;
     }
@@ -55,7 +55,7 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-    body.cursor-active { cursor: none; }
+    body.cursor-active { cursor: pointer; }
     a { color: inherit; text-decoration: none; }
 
     /* ── NOISE TEXTURE ─────────────────────────────────────── */
@@ -126,8 +126,10 @@
       font-family: 'Bricolage Grotesque', sans-serif;
       font-weight: 800; font-size: 1.1rem; letter-spacing: -0.03em; color: #fff;
       animation: glitch 9s step-end infinite;
+      display: flex; align-items: center;
     }
     .nav-logo span { color: var(--accent); }
+    .nav-v { width: 38px; height: auto; margin-right: .65rem; flex-shrink: 0; mix-blend-mode: screen; }
     @keyframes glitch {
       0%,91%,100% { clip-path: none; transform: none; text-shadow: none; }
       92% { clip-path: inset(25% 0 45% 0); transform: translateX(-3px); }
@@ -191,9 +193,9 @@
       position: absolute;
       top: clamp(40px, 8vh, 120px);
       left: 50%; transform: translateX(-50%);
-      width: min(560px, 85vw); height: auto;
+      width: min(520px, 82vw); height: auto;
       z-index: -1;
-      opacity: .20;
+      opacity: .18;
       mix-blend-mode: screen;
       pointer-events: none; -webkit-user-select: none; user-select: none;
     }
@@ -248,7 +250,7 @@
       display: inline-flex; align-items: center; gap: .5rem;
       padding: .82rem 2rem; border-radius: 10px;
       font-size: .9rem; font-weight: 600;
-      transition: all .2s; cursor: none; border: none;
+      transition: all .2s; cursor: pointer; border: none;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .btn-primary {
@@ -405,7 +407,7 @@
       position: relative; flex-shrink: 0;
       animation: nodePulse 3s ease-in-out infinite;
     }
-    @keyframes nodePulse { 0%,100%{box-shadow:0 0 20px rgba(79,142,247,.2)} 50%{box-shadow:0 0 32px rgba(79,142,247,.45)} }
+    @keyframes nodePulse { 0%,100%{box-shadow:0 0 14px rgba(79,142,247,.12)} 50%{box-shadow:0 0 22px rgba(79,142,247,.26)} }
     .sb-node::before {
       content: ''; position: absolute; inset: -6px; border-radius: 50%;
       border: 1px dashed rgba(79,142,247,.25);
@@ -421,7 +423,7 @@
       background: var(--card); border: 1px solid var(--border);
       transition: border-color .3s;
       transform-style: preserve-3d;
-      cursor: none;
+      cursor: pointer;
     }
     /* holographic border on hover */
     .proj-card::after {
@@ -430,7 +432,7 @@
       background: linear-gradient(135deg, var(--holo-1), var(--holo-2), var(--holo-3));
       opacity: 0; transition: opacity .4s ease;
     }
-    .proj-card:hover::after { opacity: 1; }
+    .proj-card:hover::after { opacity: .55; }
     .proj-cover { position: absolute; inset: 0; }
     .proj-cover svg { width: 100%; height: 100%; }
     .proj-badge {
@@ -452,11 +454,7 @@
     .ps-build {
       background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.35); color: var(--accent2);
     }
-    .ps-build::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(79,142,247,.25), transparent);
-      transform: translateX(-100%); animation: shimmer 2.8s ease-in-out infinite;
-    }
+    .ps-build::before { display: none; }
     @keyframes shimmer { to { transform: translateX(200%); } }
     .ps-live    { background: rgba(110,231,183,.1); border: 1px solid rgba(110,231,183,.35); color: var(--teal); }
     .proj-overlay {
@@ -480,7 +478,7 @@
       width: 130px; padding: 1.75rem 1rem; border-radius: 16px;
       background: var(--card); border: 1px solid var(--border);
       transition: background .2s, border-color .2s, transform .25s cubic-bezier(0.34,1.56,0.64,1);
-      cursor: none;
+      cursor: pointer;
     }
     .cic:hover { background: #181818; border-color: rgba(79,142,247,.35); transform: translateY(-6px); }
     .cic-icon { color: var(--accent); }
@@ -491,7 +489,7 @@
       display: inline-flex; align-items: center; gap: .5rem;
       background: transparent; border: 1px solid var(--border2); color: var(--muted2);
       padding: .65rem 1.5rem; border-radius: 10px; font-size: .82rem; font-weight: 500;
-      cursor: none; font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
       transition: all .2s;
     }
     .copy-email-btn:hover { border-color: rgba(255,255,255,.28); color: #fff; }
@@ -500,8 +498,9 @@
     /* ── FOOTER ─────────────────────────────────────────────── */
     footer { padding: 2rem 2.5rem; position: relative; z-index: 1; border-top: 1px solid var(--border); }
     .footer-inner { max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: #fff; }
+    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: #fff; display: flex; align-items: center; }
     .footer-logo span { color: var(--accent); }
+    .footer-v { width: 26px; height: auto; margin-right: .5rem; flex-shrink: 0; mix-blend-mode: screen; }
     footer p { font-size: .78rem; color: var(--muted); }
 
     /* ── FADE UTIL ──────────────────────────────────────────── */
@@ -546,6 +545,118 @@
     }
     @media (max-width: 1100px) { .motto-block { display: none; } }
 
+    /* ════════════════════════════════════════════════════════
+       MISSION CLIMB  (dynamic "explore the mountain" section)
+       ════════════════════════════════════════════════════════ */
+    .mission { overflow: visible; }
+    .mission-inner { position: relative; z-index: 2; }
+
+    .mission-stage { position: relative; margin-top: 1rem; }
+
+    /* mountain backdrop (Higgsfield-generated, with graceful fallback) */
+    .mission-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    .mission-bg-img {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 52% 40% at 50% 14%, rgba(79,142,247,.13), transparent 70%),
+        radial-gradient(ellipse 46% 34% at 50% 92%, rgba(110,231,183,.07), transparent 72%);
+      will-change: transform;
+    }
+
+    /* the winding helix path */
+    .mission-climb { position: relative; max-width: 940px; margin: 0 auto; padding: 2.5rem 0 1rem; }
+    .mission-spine {
+      position: absolute; top: 0; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 120px; height: 100%; z-index: 1; pointer-events: none;
+    }
+    .mission-spine path { fill: none; stroke-linecap: round; }
+    #spine-a { stroke: url(#spineGradA); stroke-width: 2.6; filter: drop-shadow(0 0 5px rgba(79,142,247,.55)); }
+    #spine-b { stroke: url(#spineGradB); stroke-width: 1.4; stroke-dasharray: 1.5 7; opacity: .65; }
+
+    /* station cards */
+    .mstation {
+      position: relative; width: calc(50% - 46px);
+      margin-bottom: 2.6rem; z-index: 2;
+      opacity: 0; transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+    }
+    .mstation.left  { margin-right: auto; transform: translate(-30px, 16px); }
+    .mstation.right { margin-left: auto;  transform: translate(30px, 16px); }
+    .mstation.ms-in { opacity: 1; transform: none; }
+
+    /* connector + node on the centre line */
+    .mstation::before {
+      content: ''; position: absolute; top: 30px; height: 2px; width: 46px;
+      opacity: .5;
+    }
+    .mstation.left::before  { right: -46px; background: linear-gradient(270deg, var(--accent), transparent); }
+    .mstation.right::before { left: -46px;  background: linear-gradient(90deg,  var(--accent), transparent); }
+    .mstation::after {
+      content: ''; position: absolute; top: 24px;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--card); border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px var(--bg), 0 0 16px var(--accent-glow);
+      transition: border-color .45s, box-shadow .45s, transform .45s;
+    }
+    .mstation.left::after  { right: -53px; }
+    .mstation.right::after { left: -53px; }
+    .mstation.ms-in::after {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px var(--bg), 0 0 22px rgba(110,231,183,.6);
+      transform: scale(1.18);
+    }
+
+    .mstation-card {
+      display: inline-flex; flex-direction: column; gap: .55rem;
+      background: rgba(16,16,16,.74); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      border: 1px solid var(--border2); border-radius: 16px;
+      padding: 1.1rem 1.25rem; max-width: 100%;
+      box-shadow: 0 12px 34px rgba(0,0,0,.4);
+      transition: border-color .25s, transform .25s;
+    }
+    .mstation:hover .mstation-card { border-color: rgba(79,142,247,.4); transform: translateY(-3px); }
+    .mstation.left .mstation-card { align-items: flex-end; text-align: right; }
+    .mstation-head { display: flex; align-items: center; gap: .7rem; }
+    .mstation.left .mstation-head { flex-direction: row-reverse; }
+    .mstation-ico {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: grid; place-items: center; color: var(--accent2);
+      background: linear-gradient(var(--card), var(--card)) padding-box,
+                  linear-gradient(135deg, var(--accent), var(--teal)) border-box;
+      border: 1px solid transparent;
+    }
+    .mstation-step { font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .22em; color: var(--accent); margin-bottom: .15rem; }
+    .mstation-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.12rem; font-weight: 800; color: #fff; letter-spacing: -.02em; line-height: 1.22; }
+    .mstation-card p { font-size: .86rem; font-weight: 300; color: var(--muted2); line-height: 1.6; }
+
+    /* summit — the V brand mark as the peak / destination */
+    .summit-peak {
+      position: relative; width: 100%; z-index: 2;
+      display: flex; justify-content: center;
+      margin-top: 1rem; padding-bottom: .25rem;
+      opacity: 0; transform: translateY(12px) scale(.82);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+    }
+    .summit-peak.ms-in { opacity: 1; transform: none; }
+    .summit-v {
+      width: 100px; height: auto; mix-blend-mode: screen;
+      filter: drop-shadow(0 0 24px rgba(79,142,247,.5));
+      -webkit-user-select: none; user-select: none;
+    }
+    .mission-closing {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;
+      margin-top: clamp(4rem, 9vw, 7rem);
+    }
+    .summit-quote { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(1.15rem, 2.4vw, 1.5rem); font-weight: 800; color: var(--accent2); letter-spacing: -.02em; max-width: 540px; line-height: 1.3; }
+    .summit-chips { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+    .summit-chip { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; font-weight: 600; color: var(--teal); background: var(--teal-dim); border: 1px solid rgba(110,231,183,.22); padding: .45rem 1rem; border-radius: 100px; }
+    .summit-cta { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; margin-top: .3rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mstation, .mission-summit { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+
     /* ── RESPONSIVE: Tablet / iPad (≤900px) ────────────────── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -586,6 +697,23 @@
       .sg-ai .skills-pills { justify-content: flex-start; }
       .skills-bridge { display: none; }
       .skills-group { gap: .75rem; }
+    }
+
+    /* ── MISSION: single-column climb on narrow screens (≤760px) ── */
+    @media (max-width: 760px) {
+      .mission-spine { left: 20px; transform: none; width: 44px; }
+      .mstation {
+        width: auto; margin-left: 50px !important; margin-right: 0 !important;
+        transform: translate(26px, 16px);
+      }
+      .mstation.left { transform: translate(26px, 16px); }
+      .mstation.ms-in { transform: none; }
+      .mstation.left .mstation-card,
+      .mstation.right .mstation-card { align-items: flex-start; text-align: left; }
+      .mstation.left .mstation-head { flex-direction: row; }
+      .mstation::before { display: none !important; }
+      .mstation::after { left: -34px !important; right: auto !important; top: 22px; }
+      .mstation-card { max-width: 100%; }
     }
 
     /* ── RESPONSIVE: Mobile (≤600px) ───────────────────────── */
@@ -631,6 +759,11 @@
       .about-text .callout { font-size: 1rem; padding-left: 1rem; }
       .goals-title { font-size: 1.35rem; }
       .goals-sub { font-size: 1.1rem; }
+
+      .mission-climb { padding-top: 1.5rem; }
+      .mstation-card { padding: .95rem 1rem; }
+      .mstation-card h3 { font-size: 1.02rem; }
+      .mstation-ico { width: 40px; height: 40px; }
     }
 
     /* ── RESPONSIVE: Small phones (≤380px) ─────────────────── */
@@ -649,10 +782,6 @@
 </head>
 <body>
 
-<!-- Custom cursor (desktop only) -->
-<div class="cursor-dot"  id="cursor-dot"  aria-hidden="true"></div>
-<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
-
 <!-- Three.js canvas (fixed background) -->
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 
@@ -662,7 +791,7 @@
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo">David Vardic<span>.</span></div>
+    <div class="nav-logo"><img class="nav-v" src="v-logo.png" alt="V" />David Vardic<span>.</span></div>
     <ul class="nav-links">
       <li><a href="#about"      data-sec="about">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -723,53 +852,155 @@
     <div class="scroll-arrow-3d">↓</div>
   </div>
 
-  <!-- FAIL / WIN Motto — desktop only -->
-  <div class="motto-block" aria-hidden="true">
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mf">FAIL</span>
-    <span class="mw">WIN.</span>
-  </div>
 </section>
 
-<!-- ── ABOUT ────────────────────────────────────────────────── -->
-<section class="section" id="about">
-  <div class="section-inner">
-    <div class="sec-heading fade">
+<!-- ── MY MISSION  (dynamic mountain climb) ─────────────────── -->
+<section class="section mission" id="about">
+  <div class="section-inner mission-inner">
+    <div class="sec-heading-center fade">
       <div class="sec-icon-wrap">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 20 6.5-11 4 6 2.5-4L21 20Z"/></svg>
       </div>
       <h2 class="sec-h">My Mission</h2>
     </div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p class="fade">Artificial intelligence is transforming how humanity creates value.</p>
-        <p class="fade">Most of today's conversation focuses on digital products, software, and content generation. Yet some of the biggest opportunities may lie elsewhere: in factories, supply chains, production systems, and operations.</p>
-        <p class="fade">These environments power the real economy. They have been built and improved over decades through engineering expertise, operational excellence, and countless human decisions. Behind every product, every shipment, and every production line lies a complex network of processes, constraints, and experience.</p>
-        <p class="callout fade">This complexity is exactly what makes the opportunity so exciting.</p>
-        <p class="fade">AI is often discussed as a replacement for human work. In operations, I see it differently. Its greatest potential lies in supporting people and helping them work more effectively. AI can make knowledge more accessible, improve decision making, and help organizations execute better.</p>
-        <p class="fade">At the same time, building useful AI for industrial environments requires more than technical expertise. It requires an understanding of processes, operations, and the realities of how businesses work. Real world constraints matter. Human judgment matters. Experience matters.</p>
-        <p class="fade">This is where I believe AI can create some of its greatest impact.</p>
-        <p class="callout fade">My mission is to help build the bridge between operations and artificial intelligence.</p>
-        <p class="fade">I want to bring together operational expertise and modern AI to create solutions that help organizations make better decisions and achieve better outcomes.</p>
-        <p class="fade">Europe has built its prosperity on engineering, manufacturing, and operational excellence. I believe the next leap in competitiveness will come from combining these strengths with artificial intelligence.</p>
-        <p class="callout closing fade">Contributing to that future is what drives my work.</p>
-        <p class="fade">That is why I currently spend much of my time exploring AI in Operations. I work on projects that genuinely excite me, share what I learn, and stay open to conversations, feedback, and collaboration.</p>
-        <p class="fade">If this resonates with you, I would love to connect. 😊</p>
+
+    <div class="mission-stage">
+      <div class="mission-bg" aria-hidden="true">
+        <div class="mission-bg-img" id="mission-bg-img"></div>
       </div>
-      <div class="facts">
-        <div class="fact goals-block fade">
-          <span class="goals-label">My Goals for 2026</span>
-          <span class="goals-title">🏁 Ship 3 AI Products</span>
-          <span class="goals-sub">✦ Open to Collaborations</span>
+
+      <div class="mission-climb">
+        <!-- winding double-helix path -->
+        <svg class="mission-spine" viewBox="0 0 120 1000" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="spineGradA" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stop-color="#4f8ef7"/>
+              <stop offset="55%" stop-color="#6ee7b7"/>
+              <stop offset="100%" stop-color="#9370db"/>
+            </linearGradient>
+            <linearGradient id="spineGradB" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stop-color="#6ee7b7"/>
+              <stop offset="100%" stop-color="#4f8ef7"/>
+            </linearGradient>
+          </defs>
+          <path id="spine-a" vector-effect="non-scaling-stroke"
+            d="M60,0 C100,55 100,110 60,165 C20,220 20,275 60,330 C100,385 100,440 60,495 C20,550 20,605 60,660 C100,715 100,770 60,825 C20,880 20,935 60,1000"/>
+          <path id="spine-b" vector-effect="non-scaling-stroke"
+            d="M60,0 C20,55 20,110 60,165 C100,220 100,275 60,330 C20,385 20,440 60,495 C100,550 100,605 60,660 C20,715 20,770 60,825 C100,880 100,935 60,1000"/>
+        </svg>
+
+        <!-- Station 01 -->
+        <article class="mstation left">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path stroke="#6ee7b7" d="M12 2.5v19"/><path d="M16.5 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6.5"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">01</div>
+                <h3>AI is rewriting how value is made</h3>
+              </div>
+            </div>
+            <p>The spotlight is on software and content. The bigger prize sits somewhere quieter.</p>
+          </div>
+        </article>
+
+        <!-- Station 02 -->
+        <article class="mstation right">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path stroke="#6ee7b7" d="M3 12h18"/><path stroke="#6ee7b7" d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">02</div>
+                <h3>The real economy runs on operations</h3>
+              </div>
+            </div>
+            <p>Factories, supply chains, production lines — built over decades of engineering and human decisions.</p>
+          </div>
+        </article>
+
+        <!-- Station 03 -->
+        <article class="mstation left">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18.5" r="2"/><circle cx="19" cy="18.5" r="2"/><path stroke="#6ee7b7" d="M11.1 6.8 5.9 16.7M12.9 6.8 18.1 16.7M7 18.5h10"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">03</div>
+                <h3>Complexity is the opportunity</h3>
+              </div>
+            </div>
+            <p>Behind every shipment lies a web of processes, constraints, and hard-won experience.</p>
+          </div>
+        </article>
+
+        <!-- Station 04 -->
+        <article class="mstation right">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><rect x="6.8" y="14" width="2.6" height="4" rx=".6"/><rect x="11.2" y="10" width="2.6" height="8" rx=".6"/><rect x="15.6" y="6.5" width="2.6" height="11.5" rx=".6"/><path stroke="#6ee7b7" d="M6 8.2l4-3 3 2 5.5-5"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">04</div>
+                <h3>The harder the problem, the bigger the prize</h3>
+              </div>
+            </div>
+            <p>The more complex a problem, the greater the potential to change the world. In operations I see the biggest gap of all: companies collect huge amounts of data, yet struggle to turn it into real, implemented optimizations. That gap is where AI's potential is enormous.</p>
+          </div>
+        </article>
+
+        <!-- Station 05 -->
+        <article class="mstation left">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" stroke="#6ee7b7"/><path stroke="#6ee7b7" d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">05</div>
+                <h3>Useful industrial AI must mirror reality</h3>
+              </div>
+            </div>
+            <p>Operations are driven by hard constraints, and things go wrong. To succeed, the models and tools have to be trained so their data reflects the real world — not an idealized version of it.</p>
+          </div>
+        </article>
+
+        <!-- Station 06 -->
+        <article class="mstation right">
+          <div class="mstation-card">
+            <div class="mstation-head">
+              <div class="mstation-ico" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18"/><circle cx="6" cy="6.7" r=".55" fill="currentColor" stroke="none"/><circle cx="8.3" cy="6.7" r=".55" fill="currentColor" stroke="none"/><path stroke="#6ee7b7" d="M12 11l1.1 2.7 2.7 1.1-2.7 1.1L12 18.6l-1.1-2.7L8.2 15.8l2.7-1.1z"/></svg>
+              </div>
+              <div>
+                <div class="mstation-step">06</div>
+                <h3>My mission: Industrial Intelligence for the World</h3>
+              </div>
+            </div>
+            <p>I want to build models, tools, and features that analyze operations processes better than today's methods. That's why I'm currently learning to build AI features and tools — and exploring in depth how to connect AI and operations.</p>
+          </div>
+        </article>
+
+        <!-- Summit — the helix ends in the V brand mark -->
+        <div class="summit-peak">
+          <img class="summit-v" src="v-logo.png" alt="David Vardic logo" />
+        </div>
+
+      </div><!-- /.mission-climb -->
+
+      <div class="mission-closing fade">
+        <p class="summit-quote">Contributing to that future is what drives my work.</p>
+        <div class="summit-chips">
+          <span class="summit-chip">Ship 3 AI Products in 2026</span>
+          <span class="summit-chip">Open to Collaborations</span>
+        </div>
+        <div class="summit-cta">
+          <a href="#projects" class="btn btn-primary">View My Work</a>
+          <a href="#contact"  class="btn btn-secondary">Let's Connect ↗</a>
         </div>
       </div>
     </div>
@@ -1325,7 +1556,7 @@
       </div>
 
       <div class="contact-meta fade">
-        <div class="contact-meta-item">📍 <span>Baden-Württemberg, Germany</span></div>
+        <div class="contact-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> <span>Baden-Württemberg, Germany</span></div>
       </div>
       <button class="copy-email-btn fade" id="copy-email-btn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1338,7 +1569,7 @@
 <!-- ── FOOTER ──────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">David Vardic<span>.</span></div>
+    <div class="footer-logo"><img class="footer-v" src="v-logo.png" alt="V" />David Vardic<span>.</span></div>
     <p>© 2026 David Vardic · All Rights Reserved</p>
   </div>
 </footer>
@@ -1517,33 +1748,6 @@ animate();
 (function() {
   'use strict';
 
-  // ── 1. CUSTOM CURSOR ───────────────────────────────────────
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-  if (hasHover) {
-    document.body.classList.add('cursor-active');
-    let cx = 0, cy = 0, rx = 0, ry = 0;
-
-    document.addEventListener('mousemove', e => {
-      cx = e.clientX; cy = e.clientY;
-      dot.style.transform  = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
-    }, { passive: true });
-
-    (function lerpRing() {
-      rx += (cx - rx) * 0.12;
-      ry += (cy - ry) * 0.12;
-      ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
-      requestAnimationFrame(lerpRing);
-    })();
-
-    document.querySelectorAll('a, button, .proj-card, .cic, .skill-pill').forEach(el => {
-      el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
-      el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
-    });
-  }
-
   // ── 2. BADGE TYPEWRITER ────────────────────────────────────
   (function() {
     const el     = document.getElementById('badge-text');
@@ -1668,6 +1872,90 @@ animate();
   const skillsEl = document.getElementById('skills');
   if (skillsEl) pillsObs.observe(skillsEl);
   setTimeout(() => document.querySelectorAll('.skill-pill:not(.pill-visible)').forEach(p => p.classList.add('pill-visible')), 3000);
+
+  // ── 5c. MISSION CLIMB — even helix draw + points appear in sync ──
+  (function() {
+    const climb = document.querySelector('.mission-climb');
+    if (!climb) return;
+
+    const items = [...climb.querySelectorAll('.mstation, .summit-peak')];
+    const svg   = climb.querySelector('.mission-spine');
+    const pathA = document.getElementById('spine-a');
+    const pathB = document.getElementById('spine-b');
+    if (!svg || !pathA || !pathB) return;
+
+    let lenA = 0, lenB = 0;
+
+    // Build the winding double-helix in real pixel space, so the stroke is
+    // uniform and the scroll-draw stays perfectly even (no SVG distortion).
+    function buildSpine() {
+      const h   = Math.max(climb.offsetHeight, 400);
+      const w   = svg.clientWidth || 120;
+      const cx  = w / 2, amp = Math.min(34, w * 0.4);
+      const halfWaves = Math.max(4, Math.round(h / 280));
+      const steps = halfWaves * 22;
+      let dA = '', dB = '';
+      for (let i = 0; i <= steps; i++) {
+        const y     = h * i / steps;
+        const phase = (i / 22) * Math.PI;
+        const xA = (cx + amp * Math.sin(phase)).toFixed(1);
+        const xB = (cx - amp * Math.sin(phase)).toFixed(1);
+        dA += (i === 0 ? 'M' : 'L') + xA + ',' + y.toFixed(1) + ' ';
+        dB += (i === 0 ? 'M' : 'L') + xB + ',' + y.toFixed(1) + ' ';
+      }
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      pathA.setAttribute('d', dA);
+      pathB.setAttribute('d', dB);
+      lenA = pathA.getTotalLength();
+      lenB = pathB.getTotalLength();
+      pathA.style.strokeDasharray = lenA;
+      pathB.style.strokeDasharray = lenB;
+    }
+
+    function setProgress(p) {
+      pathA.style.strokeDashoffset = lenA * (1 - p);
+      pathB.style.strokeDashoffset = lenB * (1 - p);
+      // Reveal each marker the moment the helix climbs past it
+      items.forEach((el, i) => {
+        const threshold = ((i + 0.6) / items.length) * 0.9;
+        el.classList.toggle('ms-in', p >= threshold);
+      });
+    }
+
+    buildSpine();
+    setProgress(0);
+
+    if (!prefersReduced && window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      ScrollTrigger.create({
+        trigger: climb,
+        start: 'top 78%',
+        end:   'bottom 60%',
+        scrub: true,
+        onRefresh: buildSpine,
+        onUpdate: (self) => setProgress(self.progress)
+      });
+
+      // gentle parallax on the ambient glow
+      const bg = document.getElementById('mission-bg-img');
+      if (bg) {
+        gsap.fromTo(bg, { yPercent: -6 }, {
+          yPercent: 6, ease: 'none',
+          scrollTrigger: { trigger: '.mission-stage', start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+      }
+
+      let rt;
+      window.addEventListener('resize', () => {
+        clearTimeout(rt);
+        rt = setTimeout(() => ScrollTrigger.refresh(), 200);
+      });
+    } else {
+      // No GSAP / reduced motion: reveal everything, full path
+      setProgress(1);
+    }
+  })();
 
   // ── 6. PROJECT CARD 3D TILT ────────────────────────────────
   const isTouchDevice = !window.matchMedia('(hover: hover)').matches;
